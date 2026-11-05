@@ -1,0 +1,12 @@
+---
+import Base from '../layouts/Base.astro';
+import { ui } from '../i18n/ui';
+const t = ui.en.notFound;
+---
+<Base title={t.title}>
+  <header class="page-head">
+    <h1>{t.title}</h1>
+    <p>{t.body}</p>
+  </header>
+  <a class="more" href="/">{t.back}</a>
+</Base>

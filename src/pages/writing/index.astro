@@ -1,0 +1,31 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+const posts = (await getCollection('writing', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const fmt = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: 'numeric' });
+---
+<Base title="Writing" description="Notes on analytics engineering, financial data and cleaning up old warehouses.">
+  <header class="page-head">
+    <h1>Writing</h1>
+    <p>Notes on analytics engineering, financial data, and what it takes to clean up a warehouse nobody wants to touch.</p>
+  </header>
+  {posts.length > 0 ? (
+    <ul class="entries list">
+      {posts.map((p) => (
+        <li>
+          <a href={`/writing/${p.id}/`}>{p.data.title}</a>
+          <p class="summary">{p.data.description}</p>
+          <p class="meta"><time datetime={p.data.date.toISOString()}>{fmt.format(p.data.date)}</time></p>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p class="empty">The first articles are being written. Follow along by <a href="/rss.xml">RSS</a> or on <a href="https://www.linkedin.com/in/ilmer/">LinkedIn</a>.</p>
+  )}
+</Base>
+<style>
+  .list, .empty { margin-top: 2.5rem; }
+  .empty { max-width: var(--measure); color: var(--muted); }
+</style>
