@@ -21,16 +21,27 @@ const t = ui[lang].about;
 
   <section class="section">
     <h2>{t.expTitle}</h2>
-    <table class="details">
-      <tbody>
-        {t.jobs.map((j) => (
-          <tr>
-            <td class="nowrap">{j.period}</td>
-            <td><span class="title">{j.role}, {j.org}</span><p class="sub">{j.place}. {j.note}</p></td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <p class="hint">{t.expHint}</p>
+    <div class="tree sunken">
+      {t.jobs.map((j, i) => (
+        <details class="job" open={i === 0}>
+          <summary>
+            <span class="box" aria-hidden="true"></span>
+            <span class="head">
+              <span class="role">{j.role}, {j.org}</span>
+              <span class="when"><span>{j.period}</span><span>{j.place}</span></span>
+            </span>
+          </summary>
+          <div class="job-body">
+            <p class="job-intro">{j.intro}</p>
+            <ul>
+              {j.bullets.map((b) => <li>{b}</li>)}
+            </ul>
+            <p class="stack"><span>Stack:</span> {j.stack}</p>
+          </div>
+        </details>
+      ))}
+    </div>
   </section>
 
   <div class="two">
@@ -68,4 +79,35 @@ const t = ui[lang].about;
   @media (max-width: 40rem) {
     .two .details tr { display: flex; justify-content: space-between; }
   }
+  .hint { font-family: var(--chrome); font-size: 0.875rem; color: var(--muted); margin: -0.25rem 0 0.75rem; }
+  /* Explorer tree: each role expands with a [+] box */
+  .tree { background: var(--white); padding: 0.5rem 0.25rem; max-width: 50rem; font-family: var(--chrome); }
+  .job + .job { border-top: 1px dotted var(--face); }
+  .job summary {
+    list-style: none; cursor: pointer; display: flex; align-items: flex-start; gap: 0.6rem;
+    padding: 0.6rem 0.5rem;
+  }
+  .job summary::-webkit-details-marker { display: none; }
+  .job summary:hover .role { color: var(--white); background: var(--title); }
+  .box {
+    flex: none; width: 11px; height: 11px; margin-top: 0.25rem; position: relative;
+    border: 1px solid var(--shadow); background: var(--white);
+  }
+  .box::before, .box::after { content: ''; position: absolute; background: var(--black); }
+  .box::before { left: 2px; right: 2px; top: 4px; height: 1px; }
+  .box::after { top: 2px; bottom: 2px; left: 4px; width: 1px; }
+  .job[open] .box::after { display: none; }
+  .head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.15rem 1.5rem; flex: 1; min-width: 0; }
+  .role { font-weight: 700; font-size: 0.9375rem; padding: 0 2px; margin-left: -2px; }
+  .when { display: flex; gap: 1rem; color: var(--muted); font-size: 0.875rem; font-variant-numeric: tabular-nums; }
+  .job-body {
+    margin: 0 0.75rem 1rem 1.6rem; padding-left: 1rem;
+    border-left: 1px dotted var(--shadow);
+    font-family: var(--page); font-size: 1.0625rem; line-height: 1.5;
+  }
+  .job-intro { font-style: italic; }
+  .job-body ul { margin: 0.6rem 0 0; padding-left: 1.2em; }
+  .job-body li + li { margin-top: 0.4rem; }
+  .stack { margin-top: 0.75rem; font-family: var(--chrome); font-size: 0.875rem; }
+  .stack span { color: var(--muted); }
 </style>
