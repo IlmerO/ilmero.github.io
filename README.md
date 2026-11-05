@@ -1,27 +1,30 @@
-## Author & License
+# ilmer.me
 
-This Bootstrap template is made by UX/UI designer [Xiaoying Riley](https://twitter.com/3rdwave_themes) for developers and is 100% FREE under the [Creative Commons Attribution 3.0 License (CC BY 3.0)](http://creativecommons.org/licenses/by/3.0/)
+Personal site of Ilmer Oliveira, Analytics Engineer. Built with [Astro](https://astro.build).
 
-If you'd like to **use the template without the attribution**, you can [buy the **commercial license** via the theme website](https://themes.3rdwavemedia.com/bootstrap-templates/popular/devblog-free-bootstrap-4-blog-template-for-developers/)
+## Writing an article
 
-#### Follow Xiaoying
+1. Copy `src/content/writing/_template.md` to `src/content/writing/my-article.md`.
+2. Fill in `title`, `description` and `date`, and remove `draft: true`.
+3. Write the body in Markdown. It will be published at `/writing/my-article/`.
 
-[Twitter](https://twitter.com/3rdwave_themes)
+Case studies work the same way in `src/content/work/` (use `_template.md` there). `order` sets the position in the list.
+Files starting with `_` are never published.
 
-[Facebook](https://www.facebook.com/3rdwavethemes/)
+## Languages
 
-[Dribbble](https://dribbble.com/Xiaoying)
+The site is in English. The home and About pages also exist in Portuguese, Spanish and German
+(`/pt/`, `/es/`, `/de/`). All of their text lives in `src/i18n/ui.ts`. Articles and case studies are English only.
 
-[Medium](https://medium.com/@3rdwave_themes)
+## Running locally
 
-[Linkedin](https://uk.linkedin.com/in/xiaoying)
+```sh
+npm install
+npm run dev      # http://localhost:4321
+npm run build    # output in dist/
+```
 
+## Deploy
 
-## Latest Version
-**v1.1** - 12 Feb 2019
-
-
-## Credits
-- [Bootstrap](https://getbootstrap.com/)
-- [FontAwesome](https://fortawesome.github.io/Font-Awesome/)
-- [Highlight.js](https://highlightjs.org/)
+Every push to `main` builds and deploys to GitHub Pages (`.github/workflows/deploy.yml`).
+Pull requests only run the build, to check it compiles.

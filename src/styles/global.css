@@ -1,0 +1,104 @@
+/* Tokens: ledger-paper palette. Ink is a blue slate, the accent is a bookkeeping green. */
+:root {
+  --paper: #f2f4f1;
+  --ink: #18262b;
+  --muted: #5b6b6d;
+  --rule: #cfd8d3;
+  --accent: #2e6a57;
+  --accent-soft: #dce7e1;
+  --sans: 'Familjen Grotesk', system-ui, sans-serif;
+  --serif: 'Source Serif 4', Georgia, serif;
+  --measure: 40rem;
+  --frame: 62rem;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --paper: #10181a;
+    --ink: #e2e9e6;
+    --muted: #93a3a2;
+    --rule: #2a3a3b;
+    --accent: #7dc2a6;
+    --accent-soft: #1b2c2a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme='dark'] {
+  --paper: #10181a;
+  --ink: #e2e9e6;
+  --muted: #93a3a2;
+  --rule: #2a3a3b;
+  --accent: #7dc2a6;
+  --accent-soft: #1b2c2a;
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 1.0625rem/1.55 var(--sans);
+  font-feature-settings: 'kern', 'liga';
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+main { flex: 1; }
+
+a { color: inherit; text-decoration-color: var(--accent); text-decoration-thickness: 1.5px; text-underline-offset: 0.2em; }
+a:hover { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+h1, h2, h3 { font-family: var(--sans); line-height: 1.15; margin: 0; }
+h1 { font-weight: 600; letter-spacing: -0.02em; }
+h2 { font-size: 1.375rem; font-weight: 600; letter-spacing: -0.01em; }
+h3 { font-size: 1.125rem; font-weight: 600; }
+p { margin: 0; }
+
+.frame { width: 100%; max-width: var(--frame); margin: 0 auto; padding: 0 1rem; }
+@media (min-width: 40rem) { .frame { padding: 0 2rem; } }
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+}
+.skip { position: absolute; left: -999px; top: 0.5rem; background: var(--ink); color: var(--paper); padding: 0.5rem 0.75rem; z-index: 10; }
+.skip:focus { left: 1rem; }
+
+/* Long-form reading: serif, slightly more leading */
+.prose { font-family: var(--serif); font-size: 1.1875rem; line-height: 1.68; max-width: var(--measure); }
+.prose > * + * { margin-top: 1.1em; }
+.prose h2 { font-size: 1.5rem; margin-top: 2em; }
+.prose h3 { margin-top: 1.6em; }
+.prose ul, .prose ol { padding-left: 1.25em; }
+.prose li + li { margin-top: 0.35em; }
+.prose blockquote { margin-left: 0; padding-left: 1.1em; border-left: 3px solid var(--accent); color: var(--muted); font-style: italic; }
+.prose code { font-size: 0.85em; background: var(--accent-soft); padding: 0.1em 0.3em; border-radius: 3px; }
+.prose pre { background: var(--accent-soft); padding: 1rem; border-radius: 4px; overflow-x: auto; font-size: 0.85rem; line-height: 1.5; }
+.prose pre code { background: none; padding: 0; }
+.prose img { max-width: 100%; height: auto; }
+.prose table { border-collapse: collapse; font-family: var(--sans); font-size: 0.95rem; }
+.prose th, .prose td { border-bottom: 1px solid var(--rule); padding: 0.4rem 0.75rem 0.4rem 0; text-align: left; }
+
+.muted { color: var(--muted); }
+.section { margin-top: 4.5rem; }
+.section > h2 { margin-bottom: 1.25rem; }
+
+/* Entry lists (work, writing) */
+.entries { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); max-width: 46rem; }
+.entries li { border-bottom: 1px solid var(--rule); padding: 1.1rem 0; }
+.entries a { font-weight: 600; font-size: 1.125rem; text-decoration: none; }
+.entries a:hover { text-decoration: underline; }
+.entries .summary { margin-top: 0.3rem; max-width: var(--measure); }
+.entries .meta { margin-top: 0.35rem; font-size: 0.9rem; color: var(--muted); }
+
+.page-head { margin-top: 3.5rem; max-width: var(--measure); }
+.page-head h1 { font-size: clamp(2rem, 5vw, 2.75rem); }
+.page-head p { margin-top: 0.9rem; font-size: 1.125rem; color: var(--muted); }
+
+.more { display: inline-block; margin-top: 1rem; font-size: 0.95rem; }

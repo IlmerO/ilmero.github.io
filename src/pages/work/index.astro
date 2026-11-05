@@ -1,0 +1,25 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+const work = (await getCollection('work', ({ data }) => !data.draft))
+  .sort((a, b) => a.data.order - b.data.order);
+---
+<Base title="Work" description="Case studies from finance and product data teams: month-end close, warehouse costs, master data.">
+  <header class="page-head">
+    <h1>Work</h1>
+    <p>Short case studies from the teams I've worked with. Client data stays out; the problem, what changed and the result stay in.</p>
+  </header>
+  <ul class="entries list">
+    {work.map((w) => (
+      <li>
+        <a href={`/work/${w.id}/`}>{w.data.title}</a>
+        <p class="summary">{w.data.summary}</p>
+        <p class="meta">{w.data.org}, {w.data.period}</p>
+      </li>
+    ))}
+  </ul>
+</Base>
+<style>
+  .list { margin-top: 2.5rem; }
+</style>
