@@ -10,16 +10,19 @@ const work = (await getCollection('work', ({ data }) => !data.draft))
     <h1>Work</h1>
     <p>Short case studies from the teams I've worked with. Client data stays out; the problem, what changed and the result stay in.</p>
   </header>
-  <ul class="entries list">
-    {work.map((w) => (
-      <li>
-        <a href={`/work/${w.id}/`}>{w.data.title}</a>
-        <p class="summary">{w.data.summary}</p>
-        <p class="meta">{w.data.org}, {w.data.period}</p>
-      </li>
-    ))}
-  </ul>
+  <table class="details list">
+    <thead><tr><th scope="col">Name</th><th scope="col">Company</th><th scope="col">Period</th></tr></thead>
+    <tbody>
+      {work.map((w) => (
+        <tr>
+          <td><a class="title" href={`/work/${w.id}/`}>{w.data.title}</a><p class="sub">{w.data.summary}</p></td>
+          <td class="nowrap">{w.data.org}</td>
+          <td class="nowrap">{w.data.period}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
 </Base>
 <style>
-  .list { margin-top: 2.5rem; }
+  .list { margin-top: 2rem; }
 </style>

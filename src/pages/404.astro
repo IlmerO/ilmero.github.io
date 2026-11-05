@@ -4,9 +4,23 @@ import { ui } from '../i18n/ui';
 const t = ui.en.notFound;
 ---
 <Base title={t.title}>
-  <header class="page-head">
-    <h1>{t.title}</h1>
-    <p>{t.body}</p>
-  </header>
-  <a class="more" href="/">{t.back}</a>
+  <div class="dialog raised" role="alertdialog" aria-labelledby="nf-title" aria-describedby="nf-body">
+    <div class="dialog-title" id="nf-title">{t.title}</div>
+    <div class="dialog-body">
+      <span class="icon" aria-hidden="true">×</span>
+      <p id="nf-body">{t.body}</p>
+    </div>
+    <p class="dialog-actions"><a class="btn" href="/">OK</a></p>
+  </div>
 </Base>
+<style>
+  .dialog { max-width: 26rem; margin: 3rem auto; padding: 3px; font-family: var(--chrome); font-size: 0.9375rem; }
+  .dialog-title { background: var(--title); color: var(--white); font-weight: 700; padding: 3px 6px; font-size: 0.875rem; }
+  .dialog-body { display: flex; gap: 1rem; align-items: center; padding: 1.25rem 1rem 0.5rem; }
+  .icon {
+    flex: none; width: 2rem; height: 2rem; border-radius: 50%; display: grid; place-items: center;
+    background: #e00; color: var(--white); font: 700 1.4rem/1 var(--chrome); box-shadow: 1px 1px 0 var(--shadow);
+  }
+  .dialog-actions { display: flex; justify-content: center; padding: 0.75rem 0 1rem; }
+  .dialog-actions .btn { min-width: 6rem; }
+</style>

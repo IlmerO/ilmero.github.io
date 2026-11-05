@@ -14,13 +14,13 @@ const fmt = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'long', day:
   <article>
     <header class="page-head">
       <h1>{post.data.title}</h1>
-      <p><time datetime={post.data.date.toISOString()}>{fmt.format(post.data.date)}</time></p>
+      <p class="muted"><time datetime={post.data.date.toISOString()}>{fmt.format(post.data.date)}</time></p>
     </header>
     <div class="prose body"><Content /></div>
   </article>
-  <a class="more back" href="/writing/">All writing</a>
+  <p class="actions back"><a class="btn" href="/writing/">All writing</a></p>
 </Base>
 <style>
-  .body { margin-top: 2.5rem; }
+  .body { margin-top: 2rem; }
   .back { margin-top: 3rem; }
 </style>

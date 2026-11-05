@@ -13,17 +13,17 @@ const { Content } = await render(entry);
   <article>
     <header class="page-head">
       <h1>{entry.data.title}</h1>
-      <p>{entry.data.org}, {entry.data.period}</p>
+      <p class="muted">{entry.data.org}, {entry.data.period}</p>
     </header>
     <div class="prose body"><Content /></div>
     {entry.data.stack.length > 0 && (
-      <p class="stack"><span class="muted">Stack:</span> {entry.data.stack.join(', ')}</p>
+      <fieldset class="group stack"><legend>Stack</legend>{entry.data.stack.join(', ')}</fieldset>
     )}
   </article>
-  <a class="more back" href="/work/">All work</a>
+  <p class="actions back"><a class="btn" href="/work/">All work</a></p>
 </Base>
 <style>
-  .body { margin-top: 2.5rem; }
-  .stack { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--rule); max-width: var(--measure); }
-  .back { margin-top: 3rem; }
+  .body { margin-top: 2rem; }
+  .stack { margin-top: 2.5rem; max-width: var(--measure); font-family: var(--chrome); font-size: 0.9375rem; }
+  .back { margin-top: 2.5rem; }
 </style>

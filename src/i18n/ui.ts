@@ -26,6 +26,7 @@ type Dict = {
     doing: { t: string; d: string }[];
     workTitle: string;
     workAll: string;
+    cols: { name: string; company: string; period: string; title: string; date: string };
     writingTitle: string;
     writingAll: string;
     contactTitle: string;
@@ -75,6 +76,7 @@ export const ui: Record<Lang, Dict> = {
       ],
       workTitle: 'Selected work',
       workAll: 'All work',
+      cols: { name: 'Name', company: 'Company', period: 'Period', title: 'Title', date: 'Date' },
       writingTitle: 'Writing',
       writingAll: 'All writing',
       contactTitle: 'Get in touch',
@@ -133,6 +135,7 @@ export const ui: Record<Lang, Dict> = {
       ],
       workTitle: 'Projetos selecionados',
       workAll: 'Todos os projetos',
+      cols: { name: 'Nome', company: 'Empresa', period: 'Período', title: 'Título', date: 'Data' },
       writingTitle: 'Artigos',
       writingAll: 'Todos os artigos',
       contactTitle: 'Contato',
@@ -191,6 +194,7 @@ export const ui: Record<Lang, Dict> = {
       ],
       workTitle: 'Proyectos seleccionados',
       workAll: 'Todos los proyectos',
+      cols: { name: 'Nombre', company: 'Empresa', period: 'Periodo', title: 'Título', date: 'Fecha' },
       writingTitle: 'Artículos',
       writingAll: 'Todos los artículos',
       contactTitle: 'Contacto',
@@ -249,6 +253,7 @@ export const ui: Record<Lang, Dict> = {
       ],
       workTitle: 'Ausgewählte Projekte',
       workAll: 'Alle Projekte',
+      cols: { name: 'Name', company: 'Firma', period: 'Zeitraum', title: 'Titel', date: 'Datum' },
       writingTitle: 'Artikel',
       writingAll: 'Alle Artikel',
       contactTitle: 'Kontakt',

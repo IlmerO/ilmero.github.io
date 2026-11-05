@@ -13,6 +13,7 @@ interface Props {
 const { title, description, lang = 'en', translated = false } = Astro.props;
 const t = ui[lang];
 const fullTitle = title ? `${title} | Ilmer Oliveira` : 'Ilmer Oliveira, Analytics Engineer';
+const windowTitle = title ? `${title} - Ilmer Oliveira` : 'Ilmer Oliveira';
 const desc = description ?? t.meta.description;
 const path = Astro.url.pathname;
 const canonical = new URL(path, Astro.site);
@@ -22,7 +23,8 @@ const nav = [
   { href: `/work/`, label: t.nav.work },
   { href: `${prefix(lang)}/about/`, label: t.nav.about },
 ];
-const isCurrent = (href: string) => path === href || path === href.replace(/\/$/, '') || (href !== home && path.startsWith(href));
+const isCurrent = (href: string) => path === href || path === href.replace(/\/$/, '') || path.startsWith(href);
+const langCodes = Object.keys(languages) as Lang[];
 ---
 <!doctype html>
 <html lang={lang}>
@@ -32,7 +34,7 @@ const isCurrent = (href: string) => path === href || path === href.replace(/\/$/
     <title>{fullTitle}</title>
     <meta name="description" content={desc} />
     <link rel="canonical" href={canonical} />
-    {translated && (Object.keys(languages) as Lang[]).map((l) => (
+    {translated && langCodes.map((l) => (
       <link rel="alternate" hreflang={l} href={new URL(pathFor(l, path), Astro.site)} />
     ))}
     <link rel="alternate" type="application/rss+xml" title="Ilmer Oliveira, writing" href="/rss.xml" />
@@ -41,85 +43,146 @@ const isCurrent = (href: string) => path === href || path === href.replace(/\/$/
     <meta property="og:description" content={desc} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap"
-    />
   </head>
   <body>
-    <a class="skip" href="#main">Skip to content</a>
-    <header class="site-header frame">
-      <a class="name" href={home}>Ilmer Oliveira</a>
-      <nav aria-label="Main">
-        <ul>
-          {nav.map((n) => (
-            <li><a href={n.href} aria-current={isCurrent(n.href) ? 'page' : undefined}>{n.label}</a></li>
-          ))}
-        </ul>
-      </nav>
-    </header>
+    <a class="skip btn" href="#main">Skip to content</a>
 
-    <main id="main" class="frame">
-      <slot />
-    </main>
+    <div class="desktop">
+      <div class="window raised">
+        <div class="titlebar">
+          <span class="titlebar-text"><span class="app-icon" aria-hidden="true"></span>{windowTitle}</span>
+          <span class="controls" aria-hidden="true"><span>_</span><span>□</span><span>×</span></span>
+        </div>
+        <div class="addressbar">
+          <span class="address-label">Address</span>
+          <span class="address sunken">{canonical.href}</span>
+        </div>
+        <main id="main" class="doc sunken">
+          <slot />
+        </main>
+        <div class="statusbar">
+          <span class="pane sunken links">
+            <a href="https://www.linkedin.com/in/ilmer/">LinkedIn</a>
+            <a href="https://github.com/ilmero">GitHub</a>
+            <a href="/rss.xml">RSS</a>
+          </span>
+          <span class="pane sunken status">{t.footer.englishOnly || 'Done'}</span>
+        </div>
+      </div>
+    </div>
 
-    <footer class="site-footer frame">
-      <p class="links">
-        <a href="https://www.linkedin.com/in/ilmer/">LinkedIn</a>
-        <a href="https://github.com/ilmero">GitHub</a>
-        <a href="/rss.xml">RSS</a>
-      </p>
-      <nav class="langs" aria-label={t.footer.language}>
-        {(Object.keys(languages) as Lang[]).map((l) =>
-          l === lang ? (
-            <span aria-current="true" lang={l}>{languages[l]}</span>
-          ) : (
-            <a href={pathFor(l, path)} lang={l} hreflang={l}>{languages[l]}</a>
-          )
-        )}
-      </nav>
-      {t.footer.englishOnly && <p class="note">{t.footer.englishOnly}</p>}
-    </footer>
+    <nav class="taskbar raised" aria-label="Main">
+      <a class="btn start" href={home} aria-current={path === home ? 'page' : undefined}>
+        <span class="bars" aria-hidden="true"><i></i><i></i><i></i></span>
+        <strong>ilmer.me</strong>
+      </a>
+      <span class="sep" aria-hidden="true"></span>
+      <ul class="tasks">
+        {nav.map((n) => (
+          <li><a class="btn task" href={n.href} aria-current={isCurrent(n.href) ? 'page' : undefined}>{n.label}</a></li>
+        ))}
+      </ul>
+      <div class="tray sunken">
+        <details class="lang">
+          <summary aria-label={`${t.footer.language}: ${languages[lang]}`}>{lang.toUpperCase()}</summary>
+          <ul class="menu raised">
+            {langCodes.map((l) => (
+              <li>
+                {l === lang
+                  ? <span aria-current="true" lang={l}>{languages[l]}</span>
+                  : <a href={pathFor(l, path)} lang={l} hreflang={l}>{languages[l]}</a>}
+              </li>
+            ))}
+          </ul>
+        </details>
+        <time class="clock" aria-hidden="true"></time>
+      </div>
+    </nav>
+
+    <script>
+      const clock = document.querySelector<HTMLTimeElement>('.clock');
+      const tick = () => {
+        if (clock) clock.textContent = new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+      };
+      tick();
+      setInterval(tick, 15000);
+      // close the language menu when clicking elsewhere
+      document.addEventListener('click', (e) => {
+        const menu = document.querySelector<HTMLDetailsElement>('details.lang');
+        if (menu?.open && !menu.contains(e.target as Node)) menu.open = false;
+      });
+    </script>
   </body>
 </html>
 
 <style>
-  .site-header {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 0.75rem 2rem;
-    padding-top: 1.75rem;
-    padding-bottom: 1.25rem;
-    border-bottom: 1px solid var(--rule);
-  }
-  .name { font-weight: 700; font-size: 1.0625rem; text-decoration: none; letter-spacing: -0.01em; }
-  nav ul { list-style: none; display: flex; gap: 1.5rem; margin: 0; padding: 0; }
-  nav a { text-decoration: none; color: var(--muted); }
-  nav a:hover { color: var(--ink); }
-  nav a[aria-current='page'] { color: var(--ink); text-decoration: underline; text-decoration-color: var(--accent); }
+  .desktop { flex: 1; padding: 1.5rem 0.5rem 1.5rem; }
+  @media (min-width: 40rem) { .desktop { padding: 2.5rem 1.5rem 4.5rem; } }
 
-  .site-footer {
-    margin-top: 6rem;
-    padding-top: 1.5rem;
-    padding-bottom: 2.5rem;
-    border-top: 1px solid var(--rule);
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 1rem 2rem;
-    font-size: 0.875rem;
-    color: var(--muted);
+  .window { max-width: 64rem; margin: 0 auto; padding: 3px; display: flex; flex-direction: column; }
+
+  .titlebar {
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    background: var(--title); color: var(--white);
+    padding: 3px 3px 3px 4px; font-weight: 700; font-size: 0.875rem;
   }
-  .links { display: flex; gap: 1.25rem; }
-  .links a { color: var(--muted); }
-  /* Language choice: deliberately quiet */
-  .langs { display: flex; gap: 0.9rem; font-size: 0.8125rem; }
-  .langs a { color: var(--muted); text-decoration: none; }
-  .langs a:hover { color: var(--ink); text-decoration: underline; }
-  .langs span { color: var(--ink); }
-  .note { flex-basis: 100%; font-size: 0.8125rem; }
+  .titlebar-text { display: flex; align-items: center; gap: 0.4rem; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .app-icon {
+    width: 14px; height: 14px; flex: none; background: var(--white);
+    box-shadow: inset -2px -2px var(--shadow), inset 0 3px var(--title), inset 0 4px var(--white);
+  }
+  .controls { display: flex; gap: 2px; flex: none; }
+  .controls span {
+    width: 18px; height: 16px; display: grid; place-items: center;
+    background: var(--face); color: var(--black); font-size: 0.75rem; line-height: 1; font-weight: 700;
+    box-shadow: inset -1px -1px var(--black), inset 1px 1px var(--white), inset -2px -2px var(--shadow), inset 2px 2px var(--light);
+  }
+  .controls span:last-child { margin-left: 2px; }
+
+  .addressbar { display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0.25rem; }
+  .address {
+    flex: 1; min-width: 0; background: var(--white); padding: 0.25rem 0.5rem;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  .doc { background: var(--white); padding: clamp(1.25rem, 4vw, 3rem); min-height: 60vh; }
+
+  .statusbar { display: flex; gap: 2px; padding-top: 2px; font-size: 0.8125rem; }
+  .pane { padding: 0.2rem 0.5rem; }
+  .links { display: flex; gap: 1rem; }
+  .links a { color: var(--black); }
+  .status { flex: 1; text-align: right; }
+
+  .taskbar {
+    display: flex; align-items: center; gap: 0.25rem; padding: 3px 2px;
+    position: sticky; bottom: 0; z-index: 10;
+  }
+  .start { padding-left: 0.4rem; padding-right: 0.6rem; }
+  .start[aria-current='page'] { background: var(--face); }
+  .bars { display: flex; align-items: flex-end; gap: 1px; height: 14px; }
+  .bars i { display: block; width: 4px; background: var(--title); }
+  .bars i:nth-child(1) { height: 6px; background: #008080; }
+  .bars i:nth-child(2) { height: 10px; background: #800000; }
+  .bars i:nth-child(3) { height: 14px; }
+  .sep { width: 2px; align-self: stretch; margin: 2px 0.15rem; box-shadow: inset 1px 0 var(--shadow), inset -1px 0 var(--white); }
+  .tasks { list-style: none; display: flex; gap: 0.25rem; margin: 0; padding: 0; flex: 1; min-width: 0; }
+  .task { padding-left: 0.6rem; padding-right: 0.6rem; }
+  @media (min-width: 40rem) { .task { min-width: 7.5rem; justify-content: flex-start; } }
+
+  .tray { display: flex; align-items: center; gap: 0.6rem; padding: 0.25rem 0.6rem; margin-left: auto; flex: none; }
+  .clock { font-variant-numeric: tabular-nums; }
+  @media (max-width: 30rem) { .clock { display: none; } }
+
+  .lang { position: relative; }
+  .lang summary { list-style: none; cursor: pointer; padding: 0 0.2rem; font-size: 0.8125rem; }
+  .lang summary::-webkit-details-marker { display: none; }
+  .lang summary:hover { background: var(--title); color: var(--white); }
+  .menu {
+    position: absolute; bottom: calc(100% + 8px); right: -0.6rem;
+    list-style: none; margin: 0; padding: 3px; min-width: 9rem;
+  }
+  .menu a, .menu span { display: block; padding: 0.3rem 1.25rem 0.3rem 1.5rem; color: var(--black); text-decoration: none; }
+  .menu a:hover, .menu a:focus-visible { background: var(--title); color: var(--white); outline: none; }
+  .menu span { position: relative; }
+  .menu span::before { content: '•'; position: absolute; left: 0.6rem; }
 </style>
