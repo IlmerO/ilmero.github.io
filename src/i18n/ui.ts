@@ -54,7 +54,7 @@ export const ui: Record<Lang, Dict> = {
     },
     nav: { writing: 'Writing', work: 'Work', about: 'About', home: 'Home' },
     home: {
-      h1: "I'm Ilmer. I build the data finance teams close the month on.",
+      h1: 'I design finance data marts and clean up the warehouses they sit on.',
       lead: "Analytics Engineer with 8+ years in data, most of them in finance: a brokerage in Brazil, a wealth manager in Berlin, and now P2P.org, a crypto staking company. Day to day that means dbt, BigQuery, Airflow and Python.",
       lineage: ['Raw sources', 'Staging', 'Marts', 'The number finance signs off on'],
       lineageLabel: 'From raw sources, through staging and marts, to the number finance signs off on',
@@ -121,7 +121,7 @@ export const ui: Record<Lang, Dict> = {
     },
     nav: { writing: 'Artigos', work: 'Projetos', about: 'Sobre', home: 'Início' },
     home: {
-      h1: 'Sou o Ilmer. Construo os dados com que o financeiro fecha o mês.',
+      h1: 'Desenho data marts financeiros e arrumo os warehouses em que eles rodam.',
       lead: 'Analytics Engineer com mais de 8 anos em dados, a maior parte em finanças: uma corretora no Brasil, uma gestora de patrimônio em Berlim e hoje a P2P.org, uma empresa de staking de cripto. No dia a dia, isso quer dizer dbt, BigQuery, Airflow e Python.',
       lineage: ['Fontes cruas', 'Staging', 'Marts', 'O número que o financeiro assina'],
       lineageLabel: 'Das fontes cruas, passando por staging e marts, até o número que o financeiro assina',
@@ -179,7 +179,7 @@ export const ui: Record<Lang, Dict> = {
     },
     nav: { writing: 'Artículos', work: 'Proyectos', about: 'Sobre mí', home: 'Inicio' },
     home: {
-      h1: 'Soy Ilmer. Construyo los datos con los que finanzas cierra el mes.',
+      h1: 'Diseño data marts financieros y ordeno los warehouses donde viven.',
       lead: 'Analytics Engineer con más de 8 años en datos, casi todos en finanzas: una corredora en Brasil, una gestora patrimonial en Berlín y ahora P2P.org, una empresa de staking de cripto. En el día a día, eso significa dbt, BigQuery, Airflow y Python.',
       lineage: ['Fuentes crudas', 'Staging', 'Marts', 'El número que finanzas firma'],
       lineageLabel: 'De las fuentes crudas, pasando por staging y marts, hasta el número que finanzas firma',
@@ -237,7 +237,7 @@ export const ui: Record<Lang, Dict> = {
     },
     nav: { writing: 'Artikel', work: 'Projekte', about: 'Über mich', home: 'Start' },
     home: {
-      h1: 'Ich bin Ilmer. Ich baue die Daten, mit denen die Finanzabteilung den Monat abschließt.',
+      h1: 'Ich entwerfe Finanz-Data-Marts und räume die Warehouses auf, in denen sie liegen.',
       lead: 'Analytics Engineer mit über 8 Jahren in Daten, die meisten davon im Finanzbereich: ein Broker in Brasilien, ein Vermögensverwalter in Berlin und heute P2P.org, ein Krypto-Staking-Unternehmen. Im Alltag heißt das dbt, BigQuery, Airflow und Python.',
       lineage: ['Rohdaten', 'Staging', 'Marts', 'Die Zahl, die das Finance-Team freigibt'],
       lineageLabel: 'Von den Rohdaten über Staging und Marts bis zur Zahl, die das Finance-Team freigibt',
