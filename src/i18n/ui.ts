@@ -45,7 +45,7 @@ type Dict = {
     langs: { name: string; level: string }[];
   };
   footer: { language: string; englishOnly: string };
-  side: { tagline: string; stack: string; languages: string; updated: string; built: string };
+  side: { tagline: string; stack: string; languages: string; updated: string; built: string; top: string; quote: string; numbers: string; meanwhile: string; go: string; inWord: string; stats: [string, string][] };
   notFound: { title: string; body: string; back: string };
 };
 
@@ -116,7 +116,7 @@ export const ui: Record<Lang, Dict> = {
       ],
     },
     footer: { language: 'Language', englishOnly: '' },
-    side: { tagline: "Analytics engineering, financial data and old warehouses.", stack: "Day-to-day stack", languages: "Read this site in", updated: "Last updated", built: "Built with Astro and hand-written CSS." },
+    side: { tagline: "Analytics engineering, financial data and old warehouses.", stack: "Day-to-day stack", languages: "Read this site in", updated: "Last updated", built: "Built with Astro and hand-written CSS.", top: "Top stories", quote: "Quote marks", numbers: "By the numbers", meanwhile: "Meanwhile...", go: "Go", inWord: "in", stats: [["8+ years", "in data, since 2018"], ["< 1 day", "month-end close at P2P.org, down from a week"], ["USD 60k", "a year cut from data costs"], ["40+", "dbt models I own"]] },
     notFound: { title: 'Page not found', body: "This page doesn't exist, or it moved when the site was rebuilt.", back: 'Go to the home page' },
   },
 
@@ -177,7 +177,7 @@ export const ui: Record<Lang, Dict> = {
       ],
     },
     footer: { language: 'Idioma', englishOnly: 'Os artigos e projetos estão em inglês.' },
-    side: { tagline: "Analytics engineering, dados financeiros e warehouses antigos.", stack: "Stack do dia a dia", languages: "Leia o site em", updated: "Atualizado em", built: "Feito com Astro e CSS escrito à mão." },
+    side: { tagline: "Analytics engineering, dados financeiros e warehouses antigos.", stack: "Stack do dia a dia", languages: "Leia o site em", updated: "Atualizado em", built: "Feito com Astro e CSS escrito à mão.", top: "Destaques", quote: "Aspas", numbers: "Em números", meanwhile: "Enquanto isso...", go: "Ir", inWord: "em", stats: [["8+ anos", "em dados, desde 2018"], ["< 1 dia", "fechamento do mês na P2P.org, antes uma semana"], ["USD 60 mil", "por ano a menos em custos de dados"], ["40+", "modelos dbt sob minha responsabilidade"]] },
     notFound: { title: 'Página não encontrada', body: 'Esta página não existe, ou mudou de lugar quando o site foi refeito.', back: 'Ir para o início' },
   },
 
@@ -238,7 +238,7 @@ export const ui: Record<Lang, Dict> = {
       ],
     },
     footer: { language: 'Idioma', englishOnly: 'Los artículos y proyectos están en inglés.' },
-    side: { tagline: "Analytics engineering, datos financieros y warehouses antiguos.", stack: "Stack del día a día", languages: "Lee el sitio en", updated: "Actualizado el", built: "Hecho con Astro y CSS escrito a mano." },
+    side: { tagline: "Analytics engineering, datos financieros y warehouses antiguos.", stack: "Stack del día a día", languages: "Lee el sitio en", updated: "Actualizado el", built: "Hecho con Astro y CSS escrito a mano.", top: "Destacados", quote: "Entre comillas", numbers: "En cifras", meanwhile: "Mientras tanto...", go: "Ir", inWord: "en", stats: [["8+ años", "en datos, desde 2018"], ["< 1 día", "cierre de mes en P2P.org, antes una semana"], ["USD 60 mil", "al año menos en costes de datos"], ["40+", "modelos dbt a mi cargo"]] },
     notFound: { title: 'Página no encontrada', body: 'Esta página no existe, o cambió de lugar cuando se rehízo el sitio.', back: 'Ir al inicio' },
   },
 
@@ -299,7 +299,7 @@ export const ui: Record<Lang, Dict> = {
       ],
     },
     footer: { language: 'Sprache', englishOnly: 'Artikel und Projekte sind auf Englisch.' },
-    side: { tagline: "Analytics Engineering, Finanzdaten und alte Warehouses.", stack: "Stack im Alltag", languages: "Diese Seite auf", updated: "Zuletzt aktualisiert am", built: "Gebaut mit Astro und handgeschriebenem CSS." },
+    side: { tagline: "Analytics Engineering, Finanzdaten und alte Warehouses.", stack: "Stack im Alltag", languages: "Diese Seite auf", updated: "Zuletzt aktualisiert am", built: "Gebaut mit Astro und handgeschriebenem CSS.", top: "Topmeldungen", quote: "Zitiert", numbers: "In Zahlen", meanwhile: "Unterdessen...", go: "Los", inWord: "in", stats: [["8+ Jahre", "in Daten, seit 2018"], ["< 1 Tag", "Monatsabschluss bei P2P.org, vorher eine Woche"], ["USD 60k", "pro Jahr weniger Datenkosten"], ["40+", "dbt-Modelle in meiner Verantwortung"]] },
     notFound: { title: 'Seite nicht gefunden', body: 'Diese Seite gibt es nicht, oder sie ist beim Umbau der Website umgezogen.', back: 'Zur Startseite' },
   },
 };

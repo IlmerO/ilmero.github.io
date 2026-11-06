@@ -1,5 +1,7 @@
 ---
+import { getCollection } from 'astro:content';
 import '../styles/global.css';
+import Logo from '../components/Logo.astro';
 import { ui, languages, prefix, pathFor, links, type Lang } from '../i18n/ui';
 
 interface Props {
@@ -8,27 +10,28 @@ interface Props {
   lang?: Lang;
   /** true for pages that exist in all four languages (adds hreflang links) */
   translated?: boolean;
+  /** red section header at the top of the content, e.g. "Top stories" */
+  section?: string;
 }
 
-const { title, description, lang = 'en', translated = false } = Astro.props;
+const { title, description, lang = 'en', translated = false, section } = Astro.props;
 const t = ui[lang];
 const fullTitle = title ? `${title} | Ilmer Oliveira` : 'Ilmer Oliveira, Analytics Engineer';
 const desc = description ?? t.meta.description;
 const path = Astro.url.pathname;
 const canonical = new URL(path, Astro.site);
 const home = `${prefix(lang)}/`;
-const atHome = path === home || path === home.replace(/\/$/, '');
 const nav = [
-  { href: home, label: t.nav.home, current: atHome },
-  { href: `${prefix(lang)}/about/`, label: t.nav.about },
-  { href: `/work/`, label: t.nav.work },
-  { href: `/writing/`, label: t.nav.writing },
-].map((n) => ({ ...n, current: n.current ?? path.startsWith(n.href) }));
+  { href: `${prefix(lang)}/about/`, label: t.nav.about, icon: 'about' },
+  { href: `/work/`, label: t.nav.work, icon: 'work' },
+  { href: `/writing/`, label: t.nav.writing, icon: 'writing' },
+];
 const langCodes = Object.keys(languages) as Lang[];
-const locale = { en: 'en-GB', pt: 'pt-BR', es: 'es-ES', de: 'de-DE' }[lang];
+const locale = { en: 'en-US', pt: 'pt-BR', es: 'es-ES', de: 'de-DE' }[lang];
 const now = new Date();
-const updated = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'long', year: 'numeric' }).format(now);
+const updated = new Intl.DateTimeFormat(locale, { month: 'short', day: 'numeric', year: 'numeric' }).format(now);
 const stack = ['dbt', 'BigQuery', 'Airflow', 'Python', 'SQL', 'Looker', 'AppSheets'];
+const work = (await getCollection('work', ({ data }) => !data.draft)).sort((a, b) => a.data.order - b.data.order);
 ---
 <!doctype html>
 <html lang={lang}>
@@ -52,131 +55,191 @@ const stack = ['dbt', 'BigQuery', 'Airflow', 'Python', 'SQL', 'Looker', 'AppShee
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
-    <div class="page">
-      <header class="masthead">
-        <a class="wordmark" href={home}>
-          <svg class="mark" viewBox="0 0 16 16" width="32" height="32" aria-hidden="true" shape-rendering="crispEdges">
-            <rect width="16" height="16" fill="#b0141b" />
-            <g fill="#fff">
-              <rect x="2" y="3" width="4" height="1" /><rect x="2" y="12" width="4" height="1" /><rect x="3" y="4" width="2" height="8" />
-              <rect x="9" y="3" width="4" height="1" /><rect x="9" y="12" width="4" height="1" /><rect x="8" y="4" width="2" height="8" /><rect x="12" y="4" width="2" height="8" />
-            </g>
-          </svg>
-          <span>Ilmer Oliveira</span>
-        </a>
-        <p class="tagline">{t.side.tagline}</p>
-      </header>
 
-      <nav class="tabs" aria-label="Main">
+    <div class="topbar">
+      <span>The <b>ilmer.me</b> Homepage</span>
+      <span class="toplinks">
+        <a href={links.linkedin}>LinkedIn</a> - <a href={links.github}>GitHub</a> - <a href="/rss.xml">RSS</a>
+      </span>
+    </div>
+
+    <div class="frame">
+      <a class="logo" href={home}><Logo /></a>
+
+      <nav class="sections" aria-label="Main">
         <ul>
           {nav.map((n) => (
-            <li><a href={n.href} aria-current={n.current ? 'page' : undefined}>{n.label}</a></li>
+            <li>
+              <a href={n.href} aria-current={path.startsWith(n.href) ? 'page' : undefined}>
+                <svg viewBox="0 0 14 14" width="14" height="14" aria-hidden="true">
+                  <circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" stroke-width="1.5" />
+                  {n.icon === 'about' && <g fill="currentColor"><circle cx="7" cy="5.3" r="1.7" /><path d="M3.8 10.4c.6-1.8 1.8-2.6 3.2-2.6s2.6.8 3.2 2.6z" /></g>}
+                  {n.icon === 'work' && <g fill="currentColor"><path d="M3.6 5h2.4l.7.8h3.7v4.2H3.6z" /></g>}
+                  {n.icon === 'writing' && <g fill="currentColor"><rect x="4" y="4.3" width="6" height="1.1" /><rect x="4" y="6.5" width="6" height="1.1" /><rect x="4" y="8.7" width="4" height="1.1" /></g>}
+                </svg>
+                <span>{n.label}</span>
+              </a>
+            </li>
           ))}
         </ul>
       </nav>
 
-      <div class="columns">
-        <main id="main" class="main">
-          <p class="dateline">{t.side.updated} {updated}</p>
-          <slot />
-        </main>
+      <main id="main" class="content">
+        {section && (
+          <div class="section-head">
+            <p class="section-title"><span class="up" aria-hidden="true"></span>{section}</p>
+            <p class="updated">{t.side.updated} {updated}</p>
+          </div>
+        )}
+        <slot />
+      </main>
 
-        <aside class="sidebar">
-          <section>
-            <h2>{t.home.contactTitle}</h2>
-            <p>{t.home.contact}</p>
-            <ul class="squares">
-              <li><a href={links.linkedin}>LinkedIn</a></li>
-              <li><a href={links.github}>GitHub</a></li>
-              <li><a href="/rss.xml">RSS</a></li>
-            </ul>
-          </section>
-          <section>
-            <h2>{t.side.stack}</h2>
-            <ul class="squares">
-              {stack.map((s) => <li>{s}</li>)}
-            </ul>
-          </section>
-          <section>
-            <h2>{t.side.languages}</h2>
-            <ul class="squares">
+      <aside class="rail">
+        <form class="lang-box" id="lang-form" action={home}>
+          <label for="lang-select">{t.side.languages}</label>
+          <div class="lang-row">
+            <select id="lang-select" name="lang">
               {langCodes.map((l) => (
-                <li>
-                  {l === lang
-                    ? <strong aria-current="true" lang={l}>{languages[l]}</strong>
-                    : <a href={pathFor(l, path)} lang={l} hreflang={l}>{languages[l]}</a>}
-                </li>
+                <option value={pathFor(l, path)} selected={l === lang} lang={l}>{languages[l]}</option>
               ))}
-            </ul>
-            {t.footer.englishOnly && <p class="note">{t.footer.englishOnly}</p>}
-          </section>
-        </aside>
-      </div>
+            </select>
+            <button type="submit">{t.side.go}</button>
+          </div>
+          {t.footer.englishOnly && <p class="lang-note">{t.footer.englishOnly}</p>}
+        </form>
 
-      <footer class="colophon">
-        <p>© {now.getFullYear()} Ilmer Oliveira. {t.side.built}</p>
+        <div class="red-box">
+          <p class="red-box-title">{t.home.contactTitle}</p>
+          <p><a href={links.linkedin}>LinkedIn</a> - <a href={links.github}>GitHub</a> - <a href="/rss.xml">RSS</a></p>
+        </div>
+
+        <section class="hooha">
+          <h2>{t.home.workTitle}</h2>
+          <ul>
+            {work.map((w) => (
+              <li>
+                <a href={`/work/${w.id}/`} hreflang="en">
+                  <b>{w.data.short ?? w.data.title}</b>
+                  <span>{w.data.org}, {w.data.period}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section class="stack-box">
+          <h2>{t.side.stack}</h2>
+          <ul>{stack.map((s) => <li>{s}</li>)}</ul>
+        </section>
+      </aside>
+
+      <footer class="foot">
+        <p class="foot-links">
+          <a href={home}>{t.nav.home}</a> | <a href={`${prefix(lang)}/about/`}>{t.nav.about}</a> | <a href="/work/">{t.nav.work}</a> | <a href="/writing/">{t.nav.writing}</a> | <a href={links.linkedin}>LinkedIn</a> | <a href={links.github}>GitHub</a>
+        </p>
+        <p>Copyright © {now.getFullYear()} Ilmer Oliveira. {t.side.built}</p>
       </footer>
     </div>
+
+    <script>
+      // Language picker: GO jumps to the selected language's version of this page.
+      const form = document.getElementById('lang-form') as HTMLFormElement | null;
+      const select = document.getElementById('lang-select') as HTMLSelectElement | null;
+      form?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (select) window.location.href = select.value;
+      });
+    </script>
   </body>
 </html>
 
 <style>
-  .page { max-width: 60rem; margin: 0 auto; background: var(--paper); min-height: 100vh; display: flex; flex-direction: column; }
-  @media (min-width: 48rem) {
-    .page { margin: 1.75rem auto 2.5rem; min-height: 0; border: 1px solid #485553; box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.12); }
+  .topbar {
+    display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.25rem 1rem;
+    background: var(--black); color: #fff; padding: 0.2rem 0.6rem; font-size: 0.75rem;
+    max-width: 62rem;
+  }
+  .toplinks { font-weight: 700; }
+  .toplinks a, .toplinks a:visited { color: #fff; text-decoration: none; }
+  .toplinks a:hover { text-decoration: underline; }
+
+  .frame {
+    max-width: 62rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-areas: 'logo' 'nav' 'main' 'rail' 'foot';
+  }
+  @media (min-width: 46rem) {
+    .frame {
+      grid-template-columns: 12rem minmax(0, 1fr);
+      grid-template-rows: auto auto 1fr auto;
+      grid-template-areas: 'logo nav' 'logo main' 'rail main' 'rail foot';
+    }
   }
 
-  .masthead { padding: 1.25rem 1rem 1rem; }
-  @media (min-width: 48rem) { .masthead { padding: 1.5rem 2rem 1.1rem; } }
-  .wordmark {
-    display: inline-flex; align-items: center; gap: 0.7rem;
-    font: 700 1.875rem/1 var(--serif); letter-spacing: -0.01em;
-    color: var(--ink); text-decoration: none;
-  }
-  .wordmark:visited { color: var(--ink); }
-  .wordmark:hover { color: var(--red); }
-  .mark { flex: none; width: 2rem; height: 2rem; }
-  .tagline { margin-top: 0.5rem; font-size: 0.8125rem; color: var(--muted); }
+  .logo { grid-area: logo; display: block; background: var(--black); line-height: 0; }
+  .logo :global(.logo-svg) { display: block; width: 100%; max-width: 12rem; height: auto; }
 
-  .tabs ul {
-    list-style: none; margin: 0; padding: 0;
-    display: grid; grid-template-columns: repeat(4, 1fr);
-    border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink);
+  .sections { grid-area: nav; background: var(--black); align-self: start; }
+  .sections ul { list-style: none; margin: 0; padding: 0.5rem 0.75rem; display: flex; flex-wrap: wrap; gap: 0.4rem 1.4rem; }
+  .sections a {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    color: #bbbbbb; text-decoration: none; text-transform: uppercase;
+    font-size: 0.6875rem; letter-spacing: 0.14em;
   }
-  .tabs li + li { border-left: 1px solid var(--rule); }
-  .tabs a {
-    display: block; text-align: center; padding: 0.4rem 0.5rem;
-    font-size: 0.8125rem; letter-spacing: 0.03em; text-transform: lowercase;
-    color: var(--red); text-decoration: none;
+  .sections a:visited { color: #bbbbbb; }
+  .sections a:hover, .sections a[aria-current='page'] { color: #ffffff; }
+  .sections a[aria-current='page'] span { border-bottom: 1px solid #fff; }
+
+  .content { grid-area: main; padding: 0.9rem 1rem 2.5rem; min-width: 0; }
+  @media (min-width: 46rem) { .content { padding: 0.9rem 1.5rem 3rem; } }
+
+  .section-head { margin-bottom: 1.1rem; }
+  .section-title {
+    display: flex; align-items: center; gap: 0.5rem;
+    color: var(--red-text); text-transform: uppercase; letter-spacing: 0.3em;
+    font-size: 1.0625rem; font-family: Georgia, 'Times New Roman', serif;
   }
-  .tabs a:hover { background: var(--band); color: var(--red); }
-  .tabs a[aria-current='page'] { background: var(--red); color: #fff; font-weight: 700; }
-  @media (max-width: 30rem) {
-    .tabs ul { grid-template-columns: repeat(2, 1fr); }
-    .tabs li:nth-child(3) { border-left: 0; }
-    .tabs li:nth-child(n + 3) { border-top: 1px solid var(--rule); }
+  .up {
+    flex: none; width: 1.25rem; height: 1.25rem; border-radius: 50%;
+    border: 2px solid var(--red-text); position: relative;
   }
-
-  .columns { display: grid; flex: 1; }
-  @media (min-width: 48rem) { .columns { grid-template-columns: minmax(0, 1fr) 13.5rem; } }
-
-  .main { padding: 1.25rem 1rem 3rem; min-width: 0; }
-  @media (min-width: 48rem) { .main { padding: 1.5rem 2rem 3.5rem; } }
-  .dateline { font-size: 0.75rem; color: var(--muted); margin-bottom: 1.75rem; }
-
-  .sidebar {
-    background: var(--side); padding: 1.5rem 1rem;
-    border-top: 1px dotted var(--muted);
-    font-size: 0.8125rem; line-height: 1.5;
+  .up::after {
+    content: ''; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -62%);
+    border: 0.3rem solid transparent; border-bottom: 0.42rem solid var(--red-text); border-top: 0;
   }
-  @media (min-width: 48rem) { .sidebar { border-top: 0; border-left: 1px dotted var(--muted); padding: 1.5rem 1.1rem 2rem; } }
-  .sidebar section + section { margin-top: 1.75rem; }
-  .sidebar h2 { font: 400 1.0625rem/1.2 var(--serif); margin-bottom: 0.5rem; }
-  .sidebar p { margin-bottom: 0.6rem; }
-  .sidebar .squares li + li { margin-top: 0.15rem; }
-  .sidebar strong { font-weight: 700; }
-  .note { margin-top: 0.6rem; color: var(--muted); font-style: italic; }
+  .updated { margin: 0.1rem 0 0 1.75rem; font-size: 0.6875rem; font-style: italic; color: var(--red-text); }
 
-  .colophon { background: var(--band); border-top: 1px solid var(--rule); padding: 0.9rem 1rem; font-size: 0.75rem; color: var(--muted); }
-  @media (min-width: 48rem) { .colophon { padding: 0.9rem 2rem; } }
+  .rail { grid-area: rail; font-size: 0.75rem; }
+
+  .lang-box { background: var(--green); padding: 0.6rem 0.7rem 0.7rem; margin: 0; }
+  .lang-box label { display: block; font-weight: 700; text-transform: uppercase; font-size: 0.6875rem; color: #006600; margin-bottom: 0.3rem; }
+  .lang-row { display: flex; gap: 0.3rem; }
+  .lang-box select { flex: 1; min-width: 0; font: inherit; font-size: 0.75rem; }
+  .lang-box button { font: inherit; font-size: 0.75rem; padding: 0.05rem 0.5rem; cursor: pointer; }
+  .lang-note { margin-top: 0.35rem; font-size: 0.6875rem; color: #004400; }
+
+  .red-box { background: var(--red); color: #fff; padding: 0.5rem 0.7rem; }
+  .red-box-title { font-weight: 700; }
+  .red-box a, .red-box a:visited { color: #fff; }
+
+  .hooha { margin: 0.9rem 0.4rem 0; background: var(--black); padding: 0 0 2px; }
+  .hooha h2 { color: var(--red); text-transform: uppercase; font-size: 0.6875rem; padding: 0.5rem 0.4rem 0.3rem; }
+  .hooha ul { list-style: none; margin: 0; padding: 0; }
+  .hooha li { border-top: 2px solid #fff; }
+  .hooha li:nth-child(odd) a { background: var(--red); }
+  .hooha li:nth-child(even) a { background: var(--black); }
+  .hooha a { display: block; padding: 0.3rem 0.4rem; color: #fff; text-decoration: none; line-height: 1.25; }
+  .hooha a:visited { color: #fff; }
+  .hooha a:hover b { text-decoration: underline; }
+  .hooha b { display: block; font-size: 0.75rem; }
+  .hooha span { display: block; font-size: 0.625rem; font-style: italic; }
+
+  .stack-box { margin: 0.9rem 0.4rem 1.5rem; border: 2px solid var(--green-line); padding: 0.4rem 0.6rem 0.5rem; }
+  .stack-box h2 { font-size: 0.75rem; margin-bottom: 0.2rem; }
+  .stack-box ul { margin: 0; padding-left: 1.1rem; }
+
+  .foot { grid-area: foot; padding: 1rem 1rem 2rem; font-size: 0.6875rem; color: var(--grey); }
+  @media (min-width: 46rem) { .foot { padding: 1rem 1.5rem 2rem; } }
+  .foot-links { margin-bottom: 0.4rem; }
 </style>

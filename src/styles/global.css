@@ -1,20 +1,18 @@
-/* Early-2000s magazine web: a white page on a grey-green backdrop, Verdana and Georgia,
-   blue underlined headlines, red italic kickers, a tab row and a dotted sidebar. */
+/* Web news, circa 2000: white page, left-aligned, dense Verdana, teal headlines,
+   red kickers, a black category bar and a left rail of coloured boxes. */
 :root {
-  --outer: #7f8e8b;
-  --outer-2: #5e6b69;
-  --paper: #ffffff;
-  --side: #f5f5f0;
-  --band: #edede6;
-  --ink: #222222;
-  --muted: #666666;
+  --black: #000000;
+  --red: #ff0000;
+  --red-text: #cc0000;
+  --green: #99ff99;
+  --green-line: #66cc66;
+  --teal: #006699;
+  --visited: #663399;
+  --ink: #000000;
+  --grey: #666666;
   --rule: #cccccc;
-  --link: #1f5a8c;
-  --visited: #5a3e88;
-  --red: #b0141b;
-  --sans: Verdana, 'DejaVu Sans', 'Bitstream Vera Sans', Geneva, sans-serif;
-  --serif: Georgia, 'Times New Roman', Times, serif;
-  --measure: 38rem;
+  --sans: Verdana, 'DejaVu Sans', 'Bitstream Vera Sans', Geneva, Arial, sans-serif;
+  --measure: 34rem;
   color-scheme: light;
 }
 
@@ -25,70 +23,59 @@
 html { -webkit-text-size-adjust: 100%; }
 body {
   margin: 0;
-  background: var(--outer-2) linear-gradient(var(--outer), var(--outer-2)) fixed;
+  background: #ffffff;
   color: var(--ink);
-  font: 400 0.9375rem/1.6 var(--sans);
+  font: 400 0.8125rem/1.5 var(--sans);
 }
 
-a { color: var(--link); text-underline-offset: 0.12em; }
+a { color: var(--teal); }
 a:visited { color: var(--visited); }
-a:hover { color: var(--red); }
-:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+a:hover { color: var(--red-text); }
+:focus-visible { outline: 2px dotted var(--red-text); outline-offset: 2px; }
 
-h1, h2, h3 { margin: 0; font-family: var(--serif); line-height: 1.15; color: var(--ink); }
-h1 { font-size: clamp(1.75rem, 4.2vw, 2.375rem); font-weight: 700; letter-spacing: -0.01em; }
-h2 { font-size: 1.375rem; font-weight: 700; }
-h3 { font-size: 1.0625rem; font-weight: 700; }
+h1, h2, h3 { margin: 0; font-family: var(--sans); line-height: 1.2; }
 p { margin: 0; }
 
 .visually-hidden {
   position: absolute; width: 1px; height: 1px; overflow: hidden;
   clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
 }
-.skip { position: absolute; left: -999px; top: 0.5rem; background: var(--paper); padding: 0.4rem 0.7rem; z-index: 10; }
+.skip { position: absolute; left: -999px; top: 0.25rem; background: #fff; padding: 0.3rem 0.6rem; z-index: 10; }
 .skip:focus { left: 1rem; }
 
-.muted { color: var(--muted); }
-.section { margin-top: 2.75rem; }
-.section > h2 { margin-bottom: 1rem; }
+.muted { color: var(--grey); }
 
-/* Kicker above a headline, Wired News style */
-.kicker { font: italic 400 0.875rem/1.3 var(--serif); color: var(--red); margin-bottom: 0.15rem; }
+/* Kicker: red italic line above a headline */
+.kicker { font-style: italic; font-weight: 700; color: var(--red-text); font-size: 0.8125rem; }
 
-/* Story lists: work, writing */
+/* Headline lists (stories) */
 .stories { list-style: none; margin: 0; padding: 0; max-width: var(--measure); }
-.stories li + li { margin-top: 1.5rem; }
-.story-title { font-weight: 700; font-size: 1.0625rem; line-height: 1.35; }
-.story-dek { margin-top: 0.25rem; }
-.more { display: inline-block; margin-top: 1.25rem; font-size: 0.8125rem; }
+.stories li + li { margin-top: 1.35rem; }
+.story-title { display: inline-block; font-weight: 700; font-size: 1rem; line-height: 1.25; }
+.story-dek { margin-top: 0.2rem; }
+.in { margin-top: 0.1rem; font-size: 0.6875rem; font-style: italic; color: var(--grey); }
+.dashes { color: var(--red-text); letter-spacing: 0.35em; margin: 0.6rem 0 1.4rem; font-weight: 700; }
+
+.more { display: inline-block; margin-top: 1.1rem; font-size: 0.75rem; font-weight: 700; }
 
 .page-head { max-width: var(--measure); }
-.page-head .dek { margin-top: 0.6rem; font-size: 1rem; color: var(--muted); }
+.page-head h1 { font-size: 1.5rem; color: var(--teal); font-weight: 700; margin-top: 0.15rem; }
+.page-head .dek { margin-top: 0.5rem; font-size: 0.875rem; }
 
-/* Square red bullets, used in lists across the site */
-.squares { list-style: none; margin: 0; padding: 0; }
-.squares li { position: relative; padding-left: 1.05rem; }
-.squares li + li { margin-top: 0.3rem; }
-.squares li::before {
-  content: ''; position: absolute; left: 0.15rem; top: 0.6em;
-  width: 5px; height: 5px; background: var(--red);
-}
-
-/* Long-form reading */
-.prose { font-family: var(--serif); font-size: 1.0625rem; line-height: 1.65; max-width: var(--measure); }
+/* Long-form text */
+.prose { font-size: 0.875rem; line-height: 1.65; max-width: var(--measure); }
 .prose > * + * { margin-top: 1em; }
-.prose h2 { font-size: 1.375rem; margin-top: 1.8em; }
-.prose h3 { margin-top: 1.4em; }
+.prose h2 { font-size: 1rem; color: var(--red-text); margin-top: 1.6em; }
+.prose h3 { font-size: 0.875rem; margin-top: 1.3em; }
 .prose ul, .prose ol { padding-left: 1.3em; }
-.prose li + li { margin-top: 0.35em; }
-.prose blockquote { margin: 1em 0 0; padding-left: 1em; border-left: 3px solid var(--rule); color: var(--muted); font-style: italic; }
-.prose code { font-family: 'Courier New', Courier, monospace; font-size: 0.95em; }
-.prose pre { background: var(--side); border: 1px solid var(--rule); padding: 0.75rem 1rem; overflow-x: auto; font-size: 0.875rem; line-height: 1.45; }
-.prose pre code { font-size: inherit; }
+.prose li + li { margin-top: 0.3em; }
+.prose blockquote { margin: 1em 0 0 1.25em; font-style: italic; }
+.prose code { font-family: 'Courier New', Courier, monospace; font-size: 1em; }
+.prose pre { background: #f2f2f2; border: 1px solid var(--rule); padding: 0.6rem 0.8rem; overflow-x: auto; font-size: 0.8125rem; }
 .prose img { max-width: 100%; height: auto; }
-.prose hr { border: 0; border-top: 1px dotted var(--muted); }
-.prose table { border-collapse: collapse; font-family: var(--sans); font-size: 0.875rem; }
-.prose th, .prose td { border: 1px solid var(--rule); padding: 0.3rem 0.6rem; text-align: left; }
+.prose hr { border: 0; border-top: 1px dashed var(--red-text); }
+.prose table { border-collapse: collapse; }
+.prose th, .prose td { border: 1px solid #999; padding: 0.2rem 0.5rem; text-align: left; }
 
-.stack-line { margin-top: 2rem; padding-top: 0.75rem; border-top: 1px dotted var(--muted); font-size: 0.8125rem; max-width: var(--measure); }
-.stack-line span { color: var(--muted); }
+.stack-line { margin-top: 1.75rem; font-size: 0.75rem; max-width: var(--measure); }
+.stack-line b { color: var(--red-text); }

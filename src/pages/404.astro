@@ -3,9 +3,8 @@ import Base from '../layouts/Base.astro';
 import { ui } from '../i18n/ui';
 const t = ui.en.notFound;
 ---
-<Base title={t.title}>
+<Base title={t.title} section="Error 404">
   <header class="page-head">
-    <p class="kicker">Error 404</p>
     <h1>{t.title}</h1>
     <p class="dek">{t.body}</p>
   </header>

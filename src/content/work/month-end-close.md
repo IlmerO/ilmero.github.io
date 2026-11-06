@@ -1,5 +1,6 @@
 ---
 title: Month-end close, from a week to under a day
+short: Month-end close
 summary: Two rounds of changes to finance reporting at a crypto staking company. The first got close down to two days, the second to less than one.
 org: P2P.org
 period: 2025 – now

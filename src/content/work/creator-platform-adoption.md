@@ -1,5 +1,6 @@
 ---
 title: Adoption data for a new creator platform
+short: Creator platform data
 summary: Mapping and modeling how creators adopted Hotmart's new platform, together with the front-end and back-end teams.
 org: Hotmart
 period: 2022 – 2023

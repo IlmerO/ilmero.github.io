@@ -1,5 +1,6 @@
 ---
 title: Cutting about USD 60k a year in warehouse costs
+short: USD 60k saved
 summary: Changing how tables are stored and processed, and refactoring models that rebuilt expensive things nobody needed.
 org: P2P.org
 period: 2025 – now
