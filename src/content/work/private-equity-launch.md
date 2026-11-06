@@ -1,5 +1,6 @@
 ---
 title: Reporting for a Private Equity product launch
+short: Private Equity launch
 summary: Full ownership of the data behind LIQID's Private Equity NXT launch, from raw data to the reports leadership used.
 org: LIQID
 period: 2023 – 2025

@@ -5,78 +5,100 @@ interface Props { lang: Lang }
 const { lang } = Astro.props;
 const t = ui[lang].about;
 ---
-<div class="about">
-  <header class="page-head">
-    <h1>{t.title}</h1>
-  </header>
+<h1 class="visually-hidden">{t.title}</h1>
 
-  <div class="intro">
-    <div class="prose">
-      {t.bio.map((p) => <p>{p}</p>)}
-    </div>
-    <img src="/images/ilmer.webp" alt={t.photoAlt} width="720" height="900" loading="eager" />
-  </div>
-
-  <section class="section">
-    <h2>{t.expTitle}</h2>
-    <ol class="timeline">
-      {t.jobs.map((j) => (
-        <li>
-          <p class="period">{j.period}</p>
-          <div>
-            <h3>{j.role}, {j.org}</h3>
-            <p class="place">{j.place}</p>
-            <p class="job-note">{j.note}</p>
-          </div>
-        </li>
-      ))}
-    </ol>
-  </section>
-
-  <div class="two">
-    <section class="section">
-      <h2>{t.eduTitle}</h2>
-      <ul class="plain">
-        {t.edu.map((e) => (
-          <li><h3>{e.t}</h3><p class="muted">{e.s}</p><p class="muted small">{e.period}</p></li>
-        ))}
-      </ul>
-    </section>
-    <section class="section">
-      <h2>{t.langTitle}</h2>
-      <table class="lang-table">
-        <tbody>
-          {t.langs.map((l) => <tr><th scope="row">{l.name}</th><td>{l.level}</td></tr>)}
-        </tbody>
-      </table>
-    </section>
-  </div>
+<div class="bio prose">
+  <img class="portrait" src="/images/ilmer.webp" alt={t.photoAlt} width="720" height="900" loading="eager" />
+  {t.bio.map((p) => <p>{p}</p>)}
 </div>
 
+<section class="section">
+  <h2>{t.expTitle}</h2>
+  <p class="hint">{t.expHint}</p>
+  <div class="jobs">
+    {t.jobs.map((j, i) => (
+      <details class="job" open={i === 0}>
+        <summary>
+          <span class="toggle" aria-hidden="true"></span>
+          <span class="head">
+            <span class="role">{j.role}, {j.org}</span>
+            <span class="when">{j.period}, {j.place}</span>
+          </span>
+        </summary>
+        <div class="job-body">
+          <p class="job-intro">{j.intro}</p>
+          <ul>
+            {j.bullets.map((b) => <li>{b}</li>)}
+          </ul>
+          <p class="job-stack"><span>Stack:</span> {j.stack}</p>
+        </div>
+      </details>
+    ))}
+  </div>
+</section>
+
+<section class="section">
+  <h2>{t.eduTitle}</h2>
+  <ul class="edu">
+    {t.edu.map((e) => (
+      <li><h3>{e.t}</h3><p>{e.s}</p><p class="muted">{e.period}</p></li>
+    ))}
+  </ul>
+</section>
+
+<section class="section">
+  <h2>{t.langTitle}</h2>
+  <table class="lang-table">
+    <tbody>
+      {t.langs.map((l) => <tr><th scope="row">{l.name}</th><td>{l.level}</td></tr>)}
+    </tbody>
+  </table>
+</section>
+
 <style>
-  .intro { display: grid; gap: 2.5rem; margin-top: 2rem; align-items: start; }
-  @media (min-width: 52rem) { .intro { grid-template-columns: minmax(0, 1fr) 15rem; gap: 4rem; } }
-  img { width: 100%; max-width: 15rem; height: auto; border-radius: 4px; filter: saturate(0.85); }
-
-  .timeline { list-style: none; margin: 0; padding: 0; max-width: 46rem; }
-  .timeline li {
-    display: grid; grid-template-columns: 1fr; gap: 0.25rem 2rem;
-    padding: 1.1rem 0; border-top: 1px solid var(--rule);
+  .bio { margin-top: 0; }
+  .section { margin-top: 2rem; }
+  .section > h2 { color: var(--red-text); font-style: italic; font-size: 0.9375rem; margin-bottom: 0.5rem; }
+  .edu h3 { font-size: 0.8125rem; color: var(--teal); }
+  .bio::after { content: ''; display: block; clear: both; }
+  .portrait {
+    float: right; width: 10.5rem; height: auto; margin: 0.3rem 0 1rem 1.5rem;
+    border: 1px solid #000;
   }
-  .timeline li:last-child { border-bottom: 1px solid var(--rule); }
-  @media (min-width: 40rem) { .timeline li { grid-template-columns: 11rem 1fr; } }
-  .period { color: var(--muted); font-size: 0.9375rem; font-variant-numeric: tabular-nums; padding-top: 0.1rem; }
-  .place { color: var(--muted); font-size: 0.9375rem; }
-  .job-note { margin-top: 0.35rem; }
+  @media (max-width: 36rem) { .portrait { width: 8rem; margin-left: 1rem; } }
 
-  .two { display: grid; gap: 0 4rem; max-width: 46rem; }
-  @media (min-width: 40rem) { .two { grid-template-columns: 3fr 2fr; } }
-  .plain { list-style: none; margin: 0; padding: 0; }
-  .plain li + li { margin-top: 1.25rem; }
-  .plain p { margin-top: 0.2rem; }
-  .small { font-size: 0.9375rem; }
-  .lang-table { border-collapse: collapse; width: 100%; }
-  .lang-table th, .lang-table td { text-align: left; padding: 0.45rem 0; border-bottom: 1px solid var(--rule); }
-  .lang-table th { font-weight: 500; }
-  .lang-table td { color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
+  .hint { font-size: 0.6875rem; font-style: italic; color: var(--grey); margin: 0 0 0.5rem; }
+  .jobs { max-width: var(--measure); border-top: 1px dashed var(--red-text); }
+  .job { border-bottom: 1px dashed var(--red-text); }
+  .job summary {
+    list-style: none; cursor: pointer;
+    display: flex; align-items: flex-start; gap: 0.6rem; padding: 0.65rem 0;
+  }
+  .job summary::-webkit-details-marker { display: none; }
+  .toggle {
+    flex: none; width: 13px; height: 13px; margin-top: 0.3rem;
+    border: 1px solid #000; position: relative; background: #fff;
+  }
+  .toggle::before, .toggle::after { content: ''; position: absolute; background: var(--ink); }
+  .toggle::before { left: 2px; right: 2px; top: 5px; height: 1px; }
+  .toggle::after { top: 2px; bottom: 2px; left: 5px; width: 1px; }
+  .job[open] .toggle::after { display: none; }
+  .head { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; }
+  .role { font-weight: 700; font-size: 0.875rem; color: var(--teal); text-decoration: underline; text-underline-offset: 0.12em; }
+  .job summary:hover .role { color: var(--red); }
+  .when { font-size: 0.6875rem; font-style: italic; color: var(--grey); }
+  .job-body { padding: 0 0 1.1rem 1.4rem; }
+  .job-intro { font-style: italic; color: var(--red-text); margin-bottom: 0.5rem; }
+  .job-body ul { margin: 0; padding-left: 1.1rem; font-size: 0.8125rem; }
+  .job-body li + li { margin-top: 0.4rem; }
+  .job-stack { margin-top: 0.6rem; font-size: 0.75rem; }
+  .job-stack span { color: var(--red-text); font-weight: 700; }
+
+  .edu { list-style: none; margin: 0; padding: 0; max-width: var(--measure); }
+  .edu li + li { margin-top: 1rem; }
+  .edu h3 { margin-bottom: 0.15rem; }
+
+  .lang-table { border-collapse: collapse; font-size: 0.8125rem; }
+  .lang-table th, .lang-table td { border: 1px solid #999; padding: 0.2rem 0.9rem 0.2rem 0.5rem; text-align: left; }
+  .lang-table th { font-weight: 400; background: #f0f0f0; }
 </style>

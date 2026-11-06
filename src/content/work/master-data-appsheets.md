@@ -1,5 +1,6 @@
 ---
 title: A source of truth for master data, built in-house
+short: Master data, in-house
 summary: Small AppSheets tools on top of the warehouse that replaced a manual process of over a month and a paid software subscription.
 org: P2P.org
 period: 2025 – now
