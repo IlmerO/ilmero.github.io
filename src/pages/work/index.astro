@@ -8,20 +8,17 @@ const work = (await getCollection('work', ({ data }) => !data.draft))
 <Base title="Work" description="Case studies from finance and product data teams: month-end close, warehouse costs, master data.">
   <header class="page-head">
     <h1>Work</h1>
-    <p>Short case studies from the teams I've worked with. Client data stays out; the problem, what changed and the result stay in.</p>
+    <p class="dek">Short case studies from the teams I've worked with. Client data stays out; the problem, what changed and the result stay in.</p>
   </header>
-  <table class="details list">
-    <thead><tr><th scope="col">Name</th><th scope="col">Company</th><th scope="col">Period</th></tr></thead>
-    <tbody>
-      {work.map((w) => (
-        <tr>
-          <td><a class="title" href={`/work/${w.id}/`}>{w.data.title}</a><p class="sub">{w.data.summary}</p></td>
-          <td class="nowrap">{w.data.org}</td>
-          <td class="nowrap">{w.data.period}</td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
+  <ul class="stories list">
+    {work.map((w) => (
+      <li>
+        <p class="kicker">{w.data.org}, {w.data.period}</p>
+        <a class="story-title" href={`/work/${w.id}/`}>{w.data.title}</a>
+        <p class="story-dek">{w.data.summary}</p>
+      </li>
+    ))}
+  </ul>
 </Base>
 <style>
   .list { margin-top: 2rem; }

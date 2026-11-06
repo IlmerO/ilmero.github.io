@@ -4,34 +4,28 @@ import Base from '../../layouts/Base.astro';
 
 const posts = (await getCollection('writing', ({ data }) => !data.draft))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-const fmt = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: 'numeric' });
+const fmt = new Intl.DateTimeFormat('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
 ---
 <Base title="Writing" description="Notes on analytics engineering, financial data and cleaning up old warehouses.">
   <header class="page-head">
     <h1>Writing</h1>
-    <p>Notes on analytics engineering, financial data, and what it takes to clean up a warehouse nobody wants to touch.</p>
+    <p class="dek">Notes on analytics engineering, financial data, and what it takes to clean up a warehouse nobody wants to touch.</p>
   </header>
   {posts.length > 0 ? (
-    <table class="details list">
-      <thead><tr><th scope="col">Title</th><th scope="col">Date</th></tr></thead>
-      <tbody>
-        {posts.map((p) => (
-          <tr>
-            <td><a class="title" href={`/writing/${p.id}/`}>{p.data.title}</a><p class="sub">{p.data.description}</p></td>
-            <td class="nowrap"><time datetime={p.data.date.toISOString()}>{fmt.format(p.data.date)}</time></td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <ul class="stories list">
+      {posts.map((p) => (
+        <li>
+          <p class="kicker"><time datetime={p.data.date.toISOString()}>{fmt.format(p.data.date)}</time></p>
+          <a class="story-title" href={`/writing/${p.id}/`}>{p.data.title}</a>
+          <p class="story-dek">{p.data.description}</p>
+        </li>
+      ))}
+    </ul>
   ) : (
-    <div class="empty sunken">
-      <p>This folder is empty. The first articles are being written.</p>
-      <p>Follow along by <a href="/rss.xml">RSS</a> or on <a href="https://www.linkedin.com/in/ilmer/">LinkedIn</a>.</p>
-    </div>
+    <p class="empty">The first articles are being written. Follow along by <a href="/rss.xml">RSS</a> or on <a href="https://www.linkedin.com/in/ilmer/">LinkedIn</a>.</p>
   )}
 </Base>
 <style>
   .list, .empty { margin-top: 2rem; }
-  .empty { max-width: 32rem; background: var(--white); padding: 1.25rem 1.5rem; font-family: var(--chrome); font-size: 0.9375rem; }
-  .empty p + p { margin-top: 0.5rem; }
+  .empty { max-width: var(--measure); padding: 1rem 1.1rem; background: var(--side); border: 1px dotted var(--muted); }
 </style>

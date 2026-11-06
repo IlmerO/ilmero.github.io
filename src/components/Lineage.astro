@@ -3,36 +3,30 @@ interface Props { steps: [string, string, string, string]; label: string }
 const { steps, label } = Astro.props;
 ---
 <figure class="lineage" role="img" aria-label={label}>
-  <div class="track sunken" aria-hidden="true"><div class="fill"></div></div>
   <ol aria-hidden="true">
     {steps.map((s, i) => <li class={i === steps.length - 1 ? 'end' : undefined}>{s}</li>)}
   </ol>
 </figure>
 
 <style>
-  .lineage { margin: 2.25rem 0 0; max-width: 42rem; font-family: var(--chrome); }
-  /* A chunky 1995 progress bar, filling once on load */
-  .lineage .track { height: 1.375rem; padding: 4px; background: var(--white); }
-  .lineage .fill {
-    height: 100%; width: 100%;
-    background: repeating-linear-gradient(90deg, var(--title) 0 0.6rem, transparent 0.6rem 0.75rem);
-    animation: fill 1.8s steps(28, end) 0.3s both;
-  }
-  @keyframes fill { from { width: 0; } to { width: 100%; } }
-
+  .lineage { margin: 1.75rem 0 0; max-width: var(--measure); }
   .lineage ol {
-    list-style: none; margin: 0.5rem 0 0; padding: 0;
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem;
-    font-size: 0.875rem; line-height: 1.3; color: var(--muted);
+    list-style: none; margin: 0; padding: 0;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    border: 1px solid var(--rule); font-size: 0.75rem; line-height: 1.35;
   }
-  .lineage li:nth-child(2) { text-align: center; }
-  .lineage li:nth-child(3) { text-align: center; }
-  .lineage .end { text-align: right; color: var(--black); font-weight: 700; }
-
-  @media (max-width: 34rem) {
+  .lineage li { position: relative; padding: 0.55rem 0.9rem 0.55rem 0.7rem; color: var(--muted); }
+  .lineage li + li { border-left: 1px solid var(--rule); }
+  /* small arrowhead on each divider, pointing to the next step */
+  .lineage li:not(.end)::after {
+    content: ''; position: absolute; right: -6px; top: 50%; margin-top: -5px; z-index: 1;
+    border: 5px solid transparent; border-left: 6px solid var(--red); border-right: 0;
+  }
+  .lineage .end { background: var(--band); color: var(--ink); font-weight: 700; }
+  @media (max-width: 30rem) {
     .lineage ol { grid-template-columns: 1fr 1fr; }
-    .lineage li:nth-child(n) { text-align: left; }
-    .lineage li:nth-child(even) { text-align: right; }
+    .lineage li:nth-child(3) { border-left: 0; }
+    .lineage li:nth-child(n + 3) { border-top: 1px solid var(--rule); }
+    .lineage li:nth-child(2)::after { display: none; }
   }
-  @media (prefers-reduced-motion: reduce) { .lineage .fill { animation: none; } }
 </style>

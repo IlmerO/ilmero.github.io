@@ -45,6 +45,7 @@ type Dict = {
     langs: { name: string; level: string }[];
   };
   footer: { language: string; englishOnly: string };
+  side: { tagline: string; stack: string; languages: string; updated: string; built: string };
   notFound: { title: string; body: string; back: string };
 };
 
@@ -115,6 +116,7 @@ export const ui: Record<Lang, Dict> = {
       ],
     },
     footer: { language: 'Language', englishOnly: '' },
+    side: { tagline: "Analytics engineering, financial data and old warehouses.", stack: "Day-to-day stack", languages: "Read this site in", updated: "Last updated", built: "Built with Astro and hand-written CSS." },
     notFound: { title: 'Page not found', body: "This page doesn't exist, or it moved when the site was rebuilt.", back: 'Go to the home page' },
   },
 
@@ -175,6 +177,7 @@ export const ui: Record<Lang, Dict> = {
       ],
     },
     footer: { language: 'Idioma', englishOnly: 'Os artigos e projetos estão em inglês.' },
+    side: { tagline: "Analytics engineering, dados financeiros e warehouses antigos.", stack: "Stack do dia a dia", languages: "Leia o site em", updated: "Atualizado em", built: "Feito com Astro e CSS escrito à mão." },
     notFound: { title: 'Página não encontrada', body: 'Esta página não existe, ou mudou de lugar quando o site foi refeito.', back: 'Ir para o início' },
   },
 
@@ -235,6 +238,7 @@ export const ui: Record<Lang, Dict> = {
       ],
     },
     footer: { language: 'Idioma', englishOnly: 'Los artículos y proyectos están en inglés.' },
+    side: { tagline: "Analytics engineering, datos financieros y warehouses antiguos.", stack: "Stack del día a día", languages: "Lee el sitio en", updated: "Actualizado el", built: "Hecho con Astro y CSS escrito a mano." },
     notFound: { title: 'Página no encontrada', body: 'Esta página no existe, o cambió de lugar cuando se rehízo el sitio.', back: 'Ir al inicio' },
   },
 
@@ -295,6 +299,7 @@ export const ui: Record<Lang, Dict> = {
       ],
     },
     footer: { language: 'Sprache', englishOnly: 'Artikel und Projekte sind auf Englisch.' },
+    side: { tagline: "Analytics Engineering, Finanzdaten und alte Warehouses.", stack: "Stack im Alltag", languages: "Diese Seite auf", updated: "Zuletzt aktualisiert am", built: "Gebaut mit Astro und handgeschriebenem CSS." },
     notFound: { title: 'Seite nicht gefunden', body: 'Diese Seite gibt es nicht, oder sie ist beim Umbau der Website umgezogen.', back: 'Zur Startseite' },
   },
 };

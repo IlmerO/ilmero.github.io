@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-import { ui, languages, prefix, pathFor, type Lang } from '../i18n/ui';
+import { ui, languages, prefix, pathFor, links, type Lang } from '../i18n/ui';
 
 interface Props {
   title?: string;
@@ -13,17 +13,22 @@ interface Props {
 const { title, description, lang = 'en', translated = false } = Astro.props;
 const t = ui[lang];
 const fullTitle = title ? `${title} | Ilmer Oliveira` : 'Ilmer Oliveira, Analytics Engineer';
-const windowTitle = title ? `${title} - Ilmer Oliveira` : 'Ilmer Oliveira';
 const desc = description ?? t.meta.description;
 const path = Astro.url.pathname;
 const canonical = new URL(path, Astro.site);
 const home = `${prefix(lang)}/`;
+const atHome = path === home || path === home.replace(/\/$/, '');
 const nav = [
-  { href: `${prefix(lang)}/about/`, label: t.nav.about, icon: 'about' },
-  { href: `/work/`, label: t.nav.work, icon: 'work' },
-  { href: `/writing/`, label: t.nav.writing, icon: 'writing' },
-];
+  { href: home, label: t.nav.home, current: atHome },
+  { href: `${prefix(lang)}/about/`, label: t.nav.about },
+  { href: `/work/`, label: t.nav.work },
+  { href: `/writing/`, label: t.nav.writing },
+].map((n) => ({ ...n, current: n.current ?? path.startsWith(n.href) }));
 const langCodes = Object.keys(languages) as Lang[];
+const locale = { en: 'en-GB', pt: 'pt-BR', es: 'es-ES', de: 'de-DE' }[lang];
+const now = new Date();
+const updated = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'long', year: 'numeric' }).format(now);
+const stack = ['dbt', 'BigQuery', 'Airflow', 'Python', 'SQL', 'Looker', 'AppSheets'];
 ---
 <!doctype html>
 <html lang={lang}>
@@ -37,219 +42,141 @@ const langCodes = Object.keys(languages) as Lang[];
       <link rel="alternate" hreflang={l} href={new URL(pathFor(l, path), Astro.site)} />
     ))}
     <link rel="alternate" type="application/rss+xml" title="Ilmer Oliveira, writing" href="/rss.xml" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={desc} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
   </head>
   <body>
-    <a class="skip btn" href="#main">Skip to content</a>
+    <a class="skip" href="#main">Skip to content</a>
+    <div class="page">
+      <header class="masthead">
+        <a class="wordmark" href={home}>
+          <svg class="mark" viewBox="0 0 16 16" width="32" height="32" aria-hidden="true" shape-rendering="crispEdges">
+            <rect width="16" height="16" fill="#b0141b" />
+            <g fill="#fff">
+              <rect x="2" y="3" width="4" height="1" /><rect x="2" y="12" width="4" height="1" /><rect x="3" y="4" width="2" height="8" />
+              <rect x="9" y="3" width="4" height="1" /><rect x="9" y="12" width="4" height="1" /><rect x="8" y="4" width="2" height="8" /><rect x="12" y="4" width="2" height="8" />
+            </g>
+          </svg>
+          <span>Ilmer Oliveira</span>
+        </a>
+        <p class="tagline">{t.side.tagline}</p>
+      </header>
 
-    <div class="desktop">
-      <nav class="icons" aria-label="Main">
+      <nav class="tabs" aria-label="Main">
         <ul>
           {nav.map((n) => (
-            <li>
-              <a class="icon" href={n.href}>
-                <svg viewBox="0 0 32 32" width="32" height="32" aria-hidden="true" shape-rendering="crispEdges">
-                  {n.icon === 'about' && (
-                    <g>
-                      <rect x="3" y="6" width="26" height="21" fill="#fff" stroke="#000" />
-                      <rect x="4" y="7" width="24" height="4" fill="#000080" />
-                      <rect x="7" y="14" width="6" height="6" fill="#808080" />
-                      <rect x="6" y="21" width="8" height="5" fill="#008080" />
-                      <rect x="16" y="15" width="10" height="2" fill="#808080" />
-                      <rect x="16" y="19" width="8" height="2" fill="#808080" />
-                      <rect x="16" y="23" width="10" height="2" fill="#808080" />
-                    </g>
-                  )}
-                  {n.icon === 'work' && (
-                    <g>
-                      <polygon points="3,8 12,8 14,10 29,10 29,27 3,27" fill="#ffd84a" stroke="#000" />
-                      <polygon points="3,13 29,13 29,27 3,27" fill="#f0c020" stroke="#000" />
-                      <rect x="4" y="14" width="24" height="1" fill="#fff6b0" />
-                    </g>
-                  )}
-                  {n.icon === 'writing' && (
-                    <g>
-                      <polygon points="7,3 21,3 26,8 26,29 7,29" fill="#fff" stroke="#000" />
-                      <polygon points="21,3 21,8 26,8" fill="#c0c0c0" stroke="#000" />
-                      <rect x="10" y="12" width="13" height="1" fill="#000080" />
-                      <rect x="10" y="15" width="13" height="1" fill="#000080" />
-                      <rect x="10" y="18" width="13" height="1" fill="#000080" />
-                      <rect x="10" y="21" width="9" height="1" fill="#000080" />
-                    </g>
-                  )}
-                </svg>
-                <span class="icon-label">{n.label}</span>
-              </a>
-            </li>
+            <li><a href={n.href} aria-current={n.current ? 'page' : undefined}>{n.label}</a></li>
           ))}
         </ul>
       </nav>
 
-      <div class="window raised">
-        <div class="titlebar">
-          <span class="titlebar-text"><span class="app-icon" aria-hidden="true"></span>{windowTitle}</span>
-          <span class="controls" aria-hidden="true"><span>_</span><span>□</span><span>×</span></span>
-        </div>
-        <div class="addressbar">
-          <span class="address-label">Address</span>
-          <span class="address sunken">{canonical.href}</span>
-        </div>
-        <main id="main" class="doc sunken">
+      <div class="columns">
+        <main id="main" class="main">
+          <p class="dateline">{t.side.updated} {updated}</p>
           <slot />
         </main>
-        <div class="statusbar">
-          <span class="pane sunken links">
-            <a href="https://www.linkedin.com/in/ilmer/">LinkedIn</a>
-            <a href="https://github.com/ilmero">GitHub</a>
-            <a href="/rss.xml">RSS</a>
-          </span>
-          <span class="pane sunken status">{t.footer.englishOnly || 'Done'}</span>
-        </div>
-      </div>
-    </div>
 
-    <div class="taskbar raised">
-      <a class="btn start" href={home}>
-        <span class="bars" aria-hidden="true"><i></i><i></i><i></i></span>
-        <strong>ilmer.me</strong>
-      </a>
-      <span class="sep" aria-hidden="true"></span>
-      <a class="btn task" href="#main" aria-current="page"><span class="app-icon small" aria-hidden="true"></span><span class="task-text">{windowTitle}</span></a>
-      <div class="tray sunken">
-        <details class="lang">
-          <summary aria-label={`${t.footer.language}: ${languages[lang]}`}>{lang.toUpperCase()}</summary>
-          <ul class="menu raised">
-            {langCodes.map((l) => (
-              <li>
-                {l === lang
-                  ? <span aria-current="true" lang={l}>{languages[l]}</span>
-                  : <a href={pathFor(l, path)} lang={l} hreflang={l}>{languages[l]}</a>}
-              </li>
-            ))}
-          </ul>
-        </details>
-        <time class="clock" aria-hidden="true"></time>
+        <aside class="sidebar">
+          <section>
+            <h2>{t.home.contactTitle}</h2>
+            <p>{t.home.contact}</p>
+            <ul class="squares">
+              <li><a href={links.linkedin}>LinkedIn</a></li>
+              <li><a href={links.github}>GitHub</a></li>
+              <li><a href="/rss.xml">RSS</a></li>
+            </ul>
+          </section>
+          <section>
+            <h2>{t.side.stack}</h2>
+            <ul class="squares">
+              {stack.map((s) => <li>{s}</li>)}
+            </ul>
+          </section>
+          <section>
+            <h2>{t.side.languages}</h2>
+            <ul class="squares">
+              {langCodes.map((l) => (
+                <li>
+                  {l === lang
+                    ? <strong aria-current="true" lang={l}>{languages[l]}</strong>
+                    : <a href={pathFor(l, path)} lang={l} hreflang={l}>{languages[l]}</a>}
+                </li>
+              ))}
+            </ul>
+            {t.footer.englishOnly && <p class="note">{t.footer.englishOnly}</p>}
+          </section>
+        </aside>
       </div>
-    </div>
 
-    <script>
-      const clock = document.querySelector<HTMLTimeElement>('.clock');
-      const tick = () => {
-        if (clock) clock.textContent = new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-      };
-      tick();
-      setInterval(tick, 15000);
-      // Desktop icons: one click selects, double-click opens (touch and keyboard open right away)
-      const icons = document.querySelectorAll<HTMLAnchorElement>('a.icon');
-      const coarse = window.matchMedia('(pointer: coarse)');
-      const select = (a?: HTMLAnchorElement) => icons.forEach((i) => i.classList.toggle('selected', i === a));
-      icons.forEach((a) => {
-        a.addEventListener('click', (e) => {
-          if (e.detail === 0 || coarse.matches) return;
-          e.preventDefault();
-          select(a);
-        });
-        a.addEventListener('dblclick', () => { window.location.href = a.href; });
-      });
-      document.addEventListener('mousedown', (e) => {
-        if (!(e.target as Element).closest('a.icon')) select();
-      });
-      // close the language menu when clicking elsewhere
-      document.addEventListener('click', (e) => {
-        const menu = document.querySelector<HTMLDetailsElement>('details.lang');
-        if (menu?.open && !menu.contains(e.target as Node)) menu.open = false;
-      });
-    </script>
+      <footer class="colophon">
+        <p>© {now.getFullYear()} Ilmer Oliveira. {t.side.built}</p>
+      </footer>
+    </div>
   </body>
 </html>
 
 <style>
-  .desktop { flex: 1; padding: 1rem 0.5rem 1.5rem; display: grid; gap: 1rem; align-content: start; }
-  @media (min-width: 40rem) { .desktop { padding: 2rem 1.5rem 4.5rem; } }
-  @media (min-width: 76rem) {
-    .desktop { grid-template-columns: 6rem minmax(0, 64rem); justify-content: center; gap: 1.5rem; }
+  .page { max-width: 60rem; margin: 0 auto; background: var(--paper); min-height: 100vh; display: flex; flex-direction: column; }
+  @media (min-width: 48rem) {
+    .page { margin: 1.75rem auto 2.5rem; min-height: 0; border: 1px solid #485553; box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.12); }
   }
 
-  /* Desktop icons */
-  .icons ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 0.5rem; }
-  @media (min-width: 76rem) { .icons ul { flex-direction: column; gap: 1.25rem; } }
-  .icon {
-    width: 5.5rem; display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
-    padding: 0.3rem 0.2rem; color: var(--white); text-decoration: none; text-align: center;
-    font-size: 0.8125rem; line-height: 1.25; cursor: default; user-select: none; -webkit-user-select: none;
+  .masthead { padding: 1.25rem 1rem 1rem; }
+  @media (min-width: 48rem) { .masthead { padding: 1.5rem 2rem 1.1rem; } }
+  .wordmark {
+    display: inline-flex; align-items: center; gap: 0.7rem;
+    font: 700 1.875rem/1 var(--serif); letter-spacing: -0.01em;
+    color: var(--ink); text-decoration: none;
   }
-  .icon svg { width: 2rem; height: 2rem; }
-  .icon-label { padding: 1px 3px; border: 1px dotted transparent; }
-  .icon.selected svg, .icon:focus-visible svg { filter: brightness(0.55) sepia(1) hue-rotate(185deg) saturate(5); }
-  .icon.selected .icon-label, .icon:focus-visible .icon-label { background: var(--title); border-color: #ffff80; }
-  .icon:focus-visible { outline: none; }
+  .wordmark:visited { color: var(--ink); }
+  .wordmark:hover { color: var(--red); }
+  .mark { flex: none; width: 2rem; height: 2rem; }
+  .tagline { margin-top: 0.5rem; font-size: 0.8125rem; color: var(--muted); }
 
-  .window { width: 100%; max-width: 64rem; margin: 0 auto; padding: 3px; display: flex; flex-direction: column; min-width: 0; }
-
-  .titlebar {
-    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-    background: var(--title); color: var(--white);
-    padding: 3px 3px 3px 4px; font-weight: 700; font-size: 0.875rem;
+  .tabs ul {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink);
   }
-  .titlebar-text { display: flex; align-items: center; gap: 0.4rem; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-  .app-icon {
-    display: inline-block; width: 14px; height: 14px; flex: none; background: var(--white);
-    box-shadow: inset -2px -2px var(--shadow), inset 0 3px var(--title), inset 0 4px var(--white);
+  .tabs li + li { border-left: 1px solid var(--rule); }
+  .tabs a {
+    display: block; text-align: center; padding: 0.4rem 0.5rem;
+    font-size: 0.8125rem; letter-spacing: 0.03em; text-transform: lowercase;
+    color: var(--red); text-decoration: none;
   }
-  .controls { display: flex; gap: 2px; flex: none; }
-  .controls span {
-    width: 18px; height: 16px; display: grid; place-items: center;
-    background: var(--face); color: var(--black); font-size: 0.75rem; line-height: 1; font-weight: 700;
-    box-shadow: inset -1px -1px var(--black), inset 1px 1px var(--white), inset -2px -2px var(--shadow), inset 2px 2px var(--light);
-  }
-  .controls span:last-child { margin-left: 2px; }
-
-  .addressbar { display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0.25rem; }
-  .address {
-    flex: 1; min-width: 0; background: var(--white); padding: 0.25rem 0.5rem;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  .tabs a:hover { background: var(--band); color: var(--red); }
+  .tabs a[aria-current='page'] { background: var(--red); color: #fff; font-weight: 700; }
+  @media (max-width: 30rem) {
+    .tabs ul { grid-template-columns: repeat(2, 1fr); }
+    .tabs li:nth-child(3) { border-left: 0; }
+    .tabs li:nth-child(n + 3) { border-top: 1px solid var(--rule); }
   }
 
-  .doc { background: var(--white); padding: clamp(1.25rem, 4vw, 3rem); min-height: 60vh; }
+  .columns { display: grid; flex: 1; }
+  @media (min-width: 48rem) { .columns { grid-template-columns: minmax(0, 1fr) 13.5rem; } }
 
-  .statusbar { display: flex; gap: 2px; padding-top: 2px; font-size: 0.8125rem; }
-  .pane { padding: 0.2rem 0.5rem; }
-  .links { display: flex; gap: 1rem; }
-  .links a { color: var(--black); }
-  .status { flex: 1; text-align: right; }
+  .main { padding: 1.25rem 1rem 3rem; min-width: 0; }
+  @media (min-width: 48rem) { .main { padding: 1.5rem 2rem 3.5rem; } }
+  .dateline { font-size: 0.75rem; color: var(--muted); margin-bottom: 1.75rem; }
 
-  .taskbar {
-    display: flex; align-items: center; gap: 0.25rem; padding: 3px 2px;
-    position: sticky; bottom: 0; z-index: 10;
+  .sidebar {
+    background: var(--side); padding: 1.5rem 1rem;
+    border-top: 1px dotted var(--muted);
+    font-size: 0.8125rem; line-height: 1.5;
   }
-  .start { padding-left: 0.4rem; padding-right: 0.6rem; }
-  .bars { display: flex; align-items: flex-end; gap: 1px; height: 14px; }
-  .bars i { display: block; width: 4px; background: var(--title); }
-  .bars i:nth-child(1) { height: 6px; background: #008080; }
-  .bars i:nth-child(2) { height: 10px; background: #800000; }
-  .bars i:nth-child(3) { height: 14px; }
-  .sep { width: 2px; align-self: stretch; margin: 2px 0.15rem; box-shadow: inset 1px 0 var(--shadow), inset -1px 0 var(--white); }
-  .task { flex: 0 1 14rem; min-width: 0; justify-content: flex-start; padding-left: 0.5rem; padding-right: 0.5rem; }
-  .task-text { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-  .app-icon.small { width: 12px; height: 12px; }
-  .tray { display: flex; align-items: center; gap: 0.6rem; padding: 0.25rem 0.6rem; margin-left: auto; flex: none; }
-  .clock { font-variant-numeric: tabular-nums; }
-  @media (max-width: 30rem) { .clock { display: none; } }
+  @media (min-width: 48rem) { .sidebar { border-top: 0; border-left: 1px dotted var(--muted); padding: 1.5rem 1.1rem 2rem; } }
+  .sidebar section + section { margin-top: 1.75rem; }
+  .sidebar h2 { font: 400 1.0625rem/1.2 var(--serif); margin-bottom: 0.5rem; }
+  .sidebar p { margin-bottom: 0.6rem; }
+  .sidebar .squares li + li { margin-top: 0.15rem; }
+  .sidebar strong { font-weight: 700; }
+  .note { margin-top: 0.6rem; color: var(--muted); font-style: italic; }
 
-  .lang { position: relative; }
-  .lang summary { list-style: none; cursor: pointer; padding: 0 0.2rem; font-size: 0.8125rem; }
-  .lang summary::-webkit-details-marker { display: none; }
-  .lang summary:hover { background: var(--title); color: var(--white); }
-  .menu {
-    position: absolute; bottom: calc(100% + 8px); right: -0.6rem;
-    list-style: none; margin: 0; padding: 3px; min-width: 9rem;
-  }
-  .menu a, .menu span { display: block; padding: 0.3rem 1.25rem 0.3rem 1.5rem; color: var(--black); text-decoration: none; }
-  .menu a:hover, .menu a:focus-visible { background: var(--title); color: var(--white); outline: none; }
-  .menu span { position: relative; }
-  .menu span::before { content: '•'; position: absolute; left: 0.6rem; }
+  .colophon { background: var(--band); border-top: 1px solid var(--rule); padding: 0.9rem 1rem; font-size: 0.75rem; color: var(--muted); }
+  @media (min-width: 48rem) { .colophon { padding: 0.9rem 2rem; } }
 </style>

@@ -12,18 +12,18 @@ const { Content } = await render(entry);
 <Base title={entry.data.title} description={entry.data.summary}>
   <article>
     <header class="page-head">
+      <p class="kicker">{entry.data.org}, {entry.data.period}</p>
       <h1>{entry.data.title}</h1>
-      <p class="muted">{entry.data.org}, {entry.data.period}</p>
+      <p class="dek">{entry.data.summary}</p>
     </header>
     <div class="prose body"><Content /></div>
     {entry.data.stack.length > 0 && (
-      <fieldset class="group stack"><legend>Stack</legend>{entry.data.stack.join(', ')}</fieldset>
+      <p class="stack-line"><span>Stack:</span> {entry.data.stack.join(', ')}</p>
     )}
   </article>
-  <p class="actions back"><a class="btn" href="/work/">All work</a></p>
+  <a class="more back" href="/work/">All work</a>
 </Base>
 <style>
   .body { margin-top: 2rem; }
-  .stack { margin-top: 2.5rem; max-width: var(--measure); font-family: var(--chrome); font-size: 0.9375rem; }
-  .back { margin-top: 2.5rem; }
+  .back { margin-top: 2rem; }
 </style>
